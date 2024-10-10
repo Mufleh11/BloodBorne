@@ -6,6 +6,13 @@ namespace BloodBorne.Context
 {
     public class DatabaseContext : IdentityDbContext<User>
     {
+        public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<Tags> Tags { get; set; }
+        public DbSet<Bosses> Bosses { get; set; }
+        public DbSet<Report> Reports { get; set; }
+        public DbSet<BossList> BossList { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionbuilder)
         {
             var folder = Environment.SpecialFolder.MyDocuments;
