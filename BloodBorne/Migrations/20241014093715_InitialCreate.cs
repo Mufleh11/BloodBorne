@@ -57,8 +57,9 @@ namespace BloodBorne.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    boss_description = table.Column<string>(type: "TEXT", nullable: false),
-                    boss_info = table.Column<string>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    BossDescription = table.Column<string>(type: "TEXT", nullable: false),
+                    BossInfo = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,10 +217,11 @@ namespace BloodBorne.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    comment_details = table.Column<string>(type: "TEXT", nullable: false),
+                    CommentDetails = table.Column<string>(type: "TEXT", nullable: false),
                     TagsId = table.Column<int>(type: "INTEGER", nullable: false),
                     BossesId = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -250,7 +252,7 @@ namespace BloodBorne.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    report_details = table.Column<string>(type: "TEXT", nullable: false),
+                    ReportDetails = table.Column<string>(type: "TEXT", nullable: false),
                     CommentId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false)
                 },

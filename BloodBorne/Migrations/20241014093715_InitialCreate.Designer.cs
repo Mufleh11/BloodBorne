@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloodBorne.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241010081731_InitialCreate")]
+    [Migration("20241014093715_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -48,11 +48,15 @@ namespace BloodBorne.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("boss_description")
+                    b.Property<string>("BossDescription")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("boss_info")
+                    b.Property<string>("BossInfo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -70,14 +74,17 @@ namespace BloodBorne.Migrations
                     b.Property<int>("BossesId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("CommentDetails")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("TagsId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("comment_details")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -101,11 +108,11 @@ namespace BloodBorne.Migrations
                     b.Property<int>("CommentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("ReportDetails")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("report_details")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

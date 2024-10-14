@@ -1,6 +1,70 @@
-﻿namespace BloodBorne.Context
+﻿using BloodBorne.Model;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace BloodBorne.Context
 {
     public class DatabaseSeeder
     {
+        private readonly DatabaseContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public DatabaseSeeder(DatabaseContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
+
+        public async Task Seed()
+        {
+
+            if (!_context.Bosses.Any())
+            {
+                var bosses = GetBosses();
+                _context.Bosses.AddRange(bosses);
+                await _context.SaveChangesAsync();
+
+            }
+
+
+            await _context.Database.MigrateAsync();
+
+            if (!_context.Users.Any())
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                await _roleManager.CreateAsync(new IdentityRole("Customer"));
+
+                var adminEmail = "admin@bb.com";
+                var adminPassword = "Blood123!";
+
+                var admin = new User
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+
+                };
+
+                await _userManager.CreateAsync(admin, adminPassword);
+                await _userManager.AddToRoleAsync(admin, "Admin");
+
+
+            }
+
+        }
+        private List<Bosses> GetBosses()
+        {
+            return
+                [
+                new Bosses {Name="Cleric Beast", BossDescription="A wild hairy beast that can deal damage to you and break your back"}
+                ];
+
+        }
+
+
+
     }
+
+  
 }
