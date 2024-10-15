@@ -5,8 +5,8 @@ namespace BloodBorne.Model
 {
     public class User : IdentityUser
     {
-        public int Id { get; set; }
-        public DateTime  dob { get; set; }
+        
+        public int Age { get; set; }
 
         public List <Comment> Comment { get; set; }
 

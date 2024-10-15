@@ -27,7 +27,6 @@ namespace BloodBorne.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -82,7 +81,6 @@ namespace BloodBorne.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -110,7 +108,6 @@ namespace BloodBorne.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -143,6 +140,9 @@ namespace BloodBorne.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Age")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -187,9 +187,6 @@ namespace BloodBorne.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("dob")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -342,9 +339,7 @@ namespace BloodBorne.Migrations
 
                     b.HasOne("BloodBorne.Model.User", "User")
                         .WithMany("Bosslist")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Bosses");
 
@@ -367,9 +362,7 @@ namespace BloodBorne.Migrations
 
                     b.HasOne("BloodBorne.Model.User", "User")
                         .WithMany("Comment")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Bosses");
 
@@ -388,9 +381,7 @@ namespace BloodBorne.Migrations
 
                     b.HasOne("BloodBorne.Model.User", "User")
                         .WithMany("Report")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Comment");
 

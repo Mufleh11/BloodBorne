@@ -7,8 +7,8 @@
         public string Name { get; set; }    
         public string BossDescription { get; set; }
         public string BossInfo { get; set; }
-        public List <Comment> Comment { get; set; }
-        public List <BossList> BossList { get; set; }
+        public List<Comment> Comment { get; set; }
+        public List<BossList> BossList { get; set; }
 
     }
 }
