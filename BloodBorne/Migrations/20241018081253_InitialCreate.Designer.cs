@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloodBorne.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241015121117_InitialCreate")]
+    [Migration("20241018081253_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -52,6 +52,10 @@ namespace BloodBorne.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("BossInfo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

@@ -33,6 +33,10 @@
                     <InputText type="password" class="form-control" placeholder="Password" @bind-Value="Model.Password" />
                 </div>
                 <div class="col-md-6">
+                    <label for="age" class="form-label">Age</label>
+                    <InputText type="age" class="form-control" placeholder="Age" @bind-Value="Model.Age" />
+                </div>
+                <div class="col-md-6">
                     <label for="name" class="form-label">Confirm Password</label>
                     <InputText type="password" class="form-control" placeholder="Confirm Password" @bind-Value="Model.ConfirmPassword" />
                 </div>
@@ -83,8 +87,13 @@
     {
         public string Email { get; set; } = "";
 
+        [Parameter] 
+        public string Age { get; set; } = "";
+
         public string Password { get; set; } = "";
 
         public string ConfirmPassword { get; set; } = "";
+
+        
     }
 }

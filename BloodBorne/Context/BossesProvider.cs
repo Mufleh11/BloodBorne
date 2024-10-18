@@ -1,4 +1,6 @@
 ﻿using BloodBorne.Model;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace BloodBorne.Context
 {
@@ -11,21 +13,19 @@ namespace BloodBorne.Context
             _context = context;
         }
 
-        //public async Task<List<Bosses>> GetAllBossesAsync()
-        //{
-        //    return await _context.Bosses.OrderBy(bosses => bosses.Name).ToListAsync();
-        //}
 
-        public async Task AddBossesAsync(Bosses bosses)
+        public async Task<List<Bosses>> GetAllBossesAsync()
         {
-            _context.Bosses.Add(bosses);
-            await _context.SaveChangesAsync();
+            return await _context.Bosses.OrderBy(bosses => bosses.Name).ToListAsync();
+
         }
 
-        public async Task UpdateCheeseAsync(Bosses bosses)
+
+        public Bosses? GetBossesById(int id)
         {
-            _context.Bosses.Update(bosses);
-            await _context.SaveChangesAsync();
+            return _context.Bosses.Find(id);
+
         }
+
     }
 }

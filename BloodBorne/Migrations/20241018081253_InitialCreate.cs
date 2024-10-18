@@ -59,7 +59,8 @@ namespace BloodBorne.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     BossDescription = table.Column<string>(type: "TEXT", nullable: false),
-                    BossInfo = table.Column<string>(type: "TEXT", nullable: false)
+                    BossInfo = table.Column<string>(type: "TEXT", nullable: false),
+                    ImageUrl = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

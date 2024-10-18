@@ -19,13 +19,13 @@ namespace BloodBorne.Context
 
         public async Task Seed()
         {
-           // await _context.Database.MigrateAsync();
-           // if (!_context.Bosses.Any())
-           // {
-           //     var bosses = GetBosses();
-           //    _context.Bosses.AddRange(bosses);
-           //    await _con text!.SaveChangesAsync();
-           //}
+            await _context.Database.MigrateAsync();
+            if (!_context.Bosses.Any())
+            {
+                var bosses = GetBosses();
+               _context.Bosses.AddRange(bosses);
+               await _context!.SaveChangesAsync();
+           }
 
 
            
@@ -57,8 +57,8 @@ namespace BloodBorne.Context
         {
             return
                 [
-                new Bosses {Name="Cleric Beast", BossDescription="A wild hairy beast that can deal damage to you and break your back", BossInfo="super cool guy"},
-                new Bosses {Name="Father Gascoigne", BossDescription="A mind turned father made beast, weilding an axe and claws", BossInfo="", }
+                new Bosses {Name="Cleric Beast", BossDescription="A wild hairy beast that can deal damage to you and break your back", BossInfo="super cool guy",  ImageUrl="cleric.jpg"},
+                new Bosses {Name="Father Gascoigne", BossDescription="A mind turned father made beast, weilding an axe and claws", BossInfo="jkgu", ImageUrl="cleric.jpg" }
                 ];
 
         }

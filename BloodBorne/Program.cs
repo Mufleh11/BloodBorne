@@ -23,6 +23,9 @@ builder.Services.AddAuthentication(options =>
 })
 .AddIdentityCookies();
 
+builder.Services.AddScoped<BossesProvider>();
+
+
 builder.Services.AddDbContext<DatabaseContext>();
 
 builder.Services.AddIdentityCore<User>()
