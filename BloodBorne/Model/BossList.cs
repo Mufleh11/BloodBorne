@@ -1,5 +1,8 @@
-﻿namespace BloodBorne.Model
+﻿using BloodBorne.Components.Shared;
+
+namespace BloodBorne.Model
 {
+
     public class BossList
     {
         public int Id { get; set; }

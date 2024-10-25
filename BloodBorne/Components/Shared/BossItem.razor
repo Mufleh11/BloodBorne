@@ -1,4 +1,7 @@
 ﻿@using BloodBorne.Model
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStorage
+@inject ListItem ListItem
 
 
 <div class="card h-100">
@@ -6,6 +9,7 @@
     <div class="card-body d-flex flex-column">
         <div class="card-body d-flex flex-column">
             <p class="card-text">@Bosses.BossDescription</p>
+            
         </div>
     </div>
 </div>
@@ -23,5 +27,11 @@
 
     private int quantity = 1;
 
+    public async Task AddToList()
+    {
+        ListItem.AddItem(Bosses);
+        await ProtectedSessionStorage.SetAsync("List", ListItem.GetItems());
+        
+    }
 
 }

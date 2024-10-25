@@ -1,5 +1,6 @@
 using BloodBorne.Components;
 using BloodBorne.Components.Account;
+using BloodBorne.Components.Shared;
 using BloodBorne.Context;
 using BloodBorne.Model;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,6 +16,8 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<BossItem>();
+builder.Services.AddScoped<ListItem>();
 
 builder.Services.AddAuthentication(options =>
 {

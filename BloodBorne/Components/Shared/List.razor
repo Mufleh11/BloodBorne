@@ -1,0 +1,25 @@
+﻿@page "/List"
+@using BloodBorne.Model
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStorage
+
+@inject ListItem ListItem
+<h3>List</h3>
+
+@code {
+
+    [Parameter]
+    public bool IsEditable { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        ListItem.OnListUpdated += async () => await ListUpdated();
+    }
+
+    private async Task ListUpdated()
+    {
+        StateHasChanged();
+        await ProtectedSessionStorage.SetAsync("List", ListItem.GetItems());
+    }
+
+}

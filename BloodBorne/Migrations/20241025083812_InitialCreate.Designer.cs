@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloodBorne.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241022113527_InitialCreate")]
+    [Migration("20241025083812_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
