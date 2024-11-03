@@ -13,6 +13,9 @@
 <PageTitle>Log in</PageTitle>
 <StatusMessage Message="@statusMessage" IsError="@isError" />
 
+
+@*Displays the login boxes for user to fill in *@
+
 <div class="card">
     <div class="card-body bg-light">
         <h4 class="card-title">Login</h4>
@@ -62,8 +65,7 @@
 
     public async Task LoginUser()
     {
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+        //Logs in the user or shows error message for invalid login
         var result = await SignInManager.PasswordSignInAsync(Model.Email, Model.Password, false, lockoutOnFailure: false);
         if (result.Succeeded)
         {
@@ -77,6 +79,7 @@
         }
     }
 
+    // Properties for storing email and password information
     private sealed class LoginModel
     {
         public string Email { get; set; } = "";

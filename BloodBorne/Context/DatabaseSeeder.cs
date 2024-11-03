@@ -29,7 +29,7 @@ namespace BloodBorne.Context
            }
 
 
-           
+           //This code is to make the admin user and to make sure the admin users details are correct
 
             if (!_context.Users.Any())
             {

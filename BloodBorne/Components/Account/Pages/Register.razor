@@ -23,25 +23,39 @@
         <h4 class="card-title">Register</h4>
 
         <EditForm OnValidSubmit="RegisterUser" Model="Model" FormName="registerForm">
-            <div class="row g-3">
-                <div class="col-md-12">
-                    <label for="email" class="form-label">Email</label>
-                    <InputText class="form-control" placeholder="Email" @bind-Value="Model.Email" />
-                </div>
-                <div class="col-md-6">
-                    <label for="password" class="form-label">Password</label>
-                    <InputText type="password" class="form-control" placeholder="Password" @bind-Value="Model.Password" />
-                </div>
+            <DataAnnotationsValidator />
+            <div class="col-lg-6 col-12 mt-1">
+            <div class="card h-100">
+                <div class="card-body bg-light d-flex flex-column">
+                <div class="form-group mb-2">
+                    <label for="email">Email</label>
+                    <InputText id="email" class="form-control" placeholder="you@example.com" @bind-Value="Model.Email" />
+                    <div class="small">
+                        <ValidationMessage For="@(() => Model!.Email)" />
+                    </div>
+                    </div>
+                <div class="form-group mb-2">
+                    <label for="password">Password</label>
+                    <InputText id="password" type="password" class="form-control" placeholder="Password" @bind-Value="Model.Password" />
+                    <div class="small">
+                        <ValidationMessage For="@(() => Model!.Password)" />
+                    </div>
                 <div class="col-md-6">
                     <label for="age" class="form-label">Age</label>
                     <InputText type="age" class="form-control" placeholder="Age" @bind-Value="Model.Age" />
                 </div>
-                <div class="col-md-6">
-                    <label for="name" class="form-label">Confirm Password</label>
-                    <InputText type="password" class="form-control" placeholder="Confirm Password" @bind-Value="Model.ConfirmPassword" />
-                </div>
+                            <div class="form-group mb-2">
+                                <label for="confirm">Confirm Password</label>
+                                <InputText id="confirm" type="password" class="form-control" placeholder="Confirm Password" @bind-Value="Model.ConfirmPassword" />
+                                <div class="small">
+                                    <ValidationMessage For="@(() => Model!.ConfirmPassword)" />
+                                </div>
+                            </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">Register</button>
+                </div>
+            </div>
+            </div>
                 </div>
             </div>
         </EditForm>
@@ -85,13 +99,21 @@
 
     private sealed class RegisterModel
     {
+        [Required(ErrorMessage = "Please enter your email.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
         public string Email { get; set; } = "";
 
-        [Parameter] 
+
+        [Required(ErrorMessage = "Please enter your Age.")]
         public string Age { get; set; } = "";
 
+        [Required(ErrorMessage = "Please enter a password.")]
+        [DataType(DataType.Password)]
         public string Password { get; set; } = "";
 
+        [Required(ErrorMessage = "Please confirm your password.")]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
 
         

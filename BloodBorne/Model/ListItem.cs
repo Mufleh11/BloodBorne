@@ -1,11 +1,9 @@
-﻿using BloodBorne.Components.Shared;
-
-namespace BloodBorne.Model
+﻿namespace BloodBorne.Model
 {
     public class ListItem
     {
         public event Action? OnListUpdated;
-        public List<BossItem> _items;
+        public List<BossList> _items;
 
         public ListItem()
         {
@@ -14,28 +12,33 @@ namespace BloodBorne.Model
 
         public void AddItem(Bosses bosses)
         {
-            var item = _items.FirstOrDefault(item => item.Bosses.Id == bosses.Id);
-            if (item == null)
-                _items.Add(new BossItem { Bosses = bosses });
-
-            //else
-            //    item.Quantity += quantity;
-
+            
+            _items.Add(new BossList { Bosses = bosses });
 
 
             OnListUpdated?.Invoke();
         }
 
-        public IEnumerable<BossItem> GetItems()
+        public void RemoveItem(Bosses bosses)
+        {
+            _items.RemoveAll(item => item.Bosses.Id == bosses.Id);
+            OnListUpdated?.Invoke();
+
+        }
+
+        public IEnumerable<BossList> GetItems()
         {
             return _items;
         }
 
-        public void SetItems(IEnumerable<BossItem> items)
+        public void SetItems(IEnumerable<BossList> items)
         {
 
             _items = items.ToList();
             OnListUpdated?.Invoke();
         }
+
+
     }
 }
+

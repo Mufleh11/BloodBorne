@@ -19,21 +19,16 @@ namespace BloodBorne.Migrations
 
             modelBuilder.Entity("BloodBorne.Model.BossList", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("BossesId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
                     b.HasIndex("BossesId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("BossList");
                 });
@@ -341,13 +336,7 @@ namespace BloodBorne.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BloodBorne.Model.User", "User")
-                        .WithMany("Bosslist")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Bosses");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BloodBorne.Model.Comment", b =>
@@ -462,8 +451,6 @@ namespace BloodBorne.Migrations
 
             modelBuilder.Entity("BloodBorne.Model.User", b =>
                 {
-                    b.Navigation("Bosslist");
-
                     b.Navigation("Comment");
 
                     b.Navigation("Report");

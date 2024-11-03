@@ -1,15 +1,43 @@
 ﻿@page "/List"
 @using BloodBorne.Model
+@using BloodBorne.Components.Pages
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage ProtectedSessionStorage
-
 @inject ListItem ListItem
-<h3>List</h3>
+
+
+<div>
+   
+
+    @foreach (var item in ListItem.GetItems())
+    {
+        <h4>
+            <tr>
+                    <td scope="col">@item.Bosses.Name</td>
+
+            </tr>
+        </h4>
+
+         <td scope="col">
+            <button class="btn btn-info mt-1 mt-md-1" @onclick="() => RemoveItem(item)">Remove</button>
+
+        </td> 
+
+
+
+
+    }
+
+    </div>
+
+
+
 
 @code {
 
     [Parameter]
     public bool IsEditable { get; set; } = false;
+
 
     protected override void OnInitialized()
     {
@@ -22,4 +50,9 @@
         await ProtectedSessionStorage.SetAsync("List", ListItem.GetItems());
     }
 
+
+    private void RemoveItem(BossList item)
+    {
+        ListItem.RemoveItem(item.Bosses);
+    }
 }

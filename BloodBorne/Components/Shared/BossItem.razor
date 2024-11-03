@@ -1,7 +1,7 @@
-﻿@using BloodBorne.Model
+﻿@inject ListItem ListItem
+@using BloodBorne.Model
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage ProtectedSessionStorage
-@inject ListItem ListItem
 
 
 <div class="card h-100">
@@ -11,6 +11,13 @@
             <p class="card-text">@Bosses.BossDescription</p>
             
         </div>
+
+        <EditForm Model= "quantity" OnSubmit="AddToList"> 
+            <button class="btn btn-outline-primary" for="btn-check-outlined">Add</button>
+
+        </EditForm>
+
+
     </div>
 </div>
 
@@ -35,3 +42,4 @@
     }
 
 }
+ 

@@ -12,7 +12,7 @@ namespace BloodBorne.Model
 
         public List <Report> Report { get; set; }
 
-        public List <BossList> Bosslist {  get; set; }
+        
 
     }
 }

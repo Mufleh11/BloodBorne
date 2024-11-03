@@ -11,7 +11,8 @@ namespace BloodBorne.Context
         public DbSet<Tags> Tags { get; set; }
         public DbSet<Bosses> Bosses { get; set; }
         public DbSet<Report> Reports { get; set; }
-        public DbSet<BossList> BossList { get; set; }
+        
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionbuilder)
         {

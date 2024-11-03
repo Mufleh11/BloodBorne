@@ -1,12 +1,19 @@
 ﻿@page "/"
 @using BloodBorne.Context
+@inject NavigationManager NavigationManager
 @using BloodBorne.Model
 @using BloodBorne.Components.Shared
 @inject BossesProvider BossesProvider 
 
 <PageTitle>BloodBorne</PageTitle>
 
-<h1>will you be laughing tomorrow</h1>
+<div class="d-grid gap-2 d-md-block">
+    <div class="row">
+        <div class="col">
+            <a @onclick="GoToList" button type="button" class="btn btn-dark btn-lg  w-100">List</a>
+        </div>
+    </div>
+</div>
 
   <div class="row ">
 @foreach (var bosses in FilteredBosses)
@@ -52,6 +59,11 @@
         bosses = await BossesProvider.GetAllBossesAsync();
         filteredBosses = bosses;
 
+    }
+
+    private void GoToList()
+    {
+        NavigationManager.NavigateTo("/List");
     }
 
 }

@@ -190,19 +190,13 @@ namespace BloodBorne.Migrations
                 name: "BossList",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BossesId = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true)
+                    BossesId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BossList", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BossList_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                    table.PrimaryKey("PK_BossList", x => x.id);
                     table.ForeignKey(
                         name: "FK_BossList_Bosses_BossesId",
                         column: x => x.BossesId,
@@ -312,11 +306,6 @@ namespace BloodBorne.Migrations
                 name: "IX_BossList_BossesId",
                 table: "BossList",
                 column: "BossesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BossList_UserId",
-                table: "BossList",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_BossesId",

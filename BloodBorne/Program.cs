@@ -16,8 +16,8 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-builder.Services.AddScoped<BossItem>();
-builder.Services.AddScoped<ListItem>();
+
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -27,7 +27,7 @@ builder.Services.AddAuthentication(options =>
 .AddIdentityCookies();
 
 builder.Services.AddScoped<BossesProvider>();
-
+builder.Services.AddScoped<ListItem>();
 
 builder.Services.AddDbContext<DatabaseContext>();
 
