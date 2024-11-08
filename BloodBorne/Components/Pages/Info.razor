@@ -1,0 +1,78 @@
+﻿@page "/Info/{id:int}"
+@using BloodBorne.Context
+@using BloodBorne.Model
+@using BloodBorne.Components.Shared
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStorage
+@inject DatabaseContext DbContext
+
+
+
+
+
+@*  <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-body bg-light">
+                <h5 class="card-title">@Bosses.Name</h5>
+                <p>
+                     @Bosses.BossInfo
+
+                </p>
+</div>
+</div>
+
+</div> *@
+
+
+
+@* <div class="row ">
+@foreach (var bosses in bosses)
+    {
+        <div class="col-12 col-md-6 col-lg-4">
+            <Information Bosses ="bosses" />
+
+        </div>
+    }
+</div>  *@
+<div>
+    <Information Bosses="bosses" />
+</div>
+
+@code
+{
+    
+    [Parameter]
+    public int Id { get; set; }
+
+    private Bosses? bosses;
+
+    protected override void OnInitialized()
+    {
+        bosses = DbContext.Bosses.SingleOrDefault(b => b.Id == Id);
+    }
+
+
+    // [Parameter]
+    // public Bosses Bosses { get; set; }
+
+    // private List<Bosses> bosses;
+
+
+
+    // private bool GetSearchCriteria(Bosses bosses)
+    // {
+    //     if (string.IsNullOrWhiteSpace()) return true;
+
+    //     return 
+    //     bosses.Name.Contains(, StringComparison.OrdinalIgnoreCase);
+    //     bosses.BossDescription.Contains(, StringComparison.OrdinalIgnoreCase);
+       
+    // }
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     bosses = await BossesProvider.GetAllBossesAsync();
+       
+
+    // }
+}

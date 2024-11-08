@@ -58,8 +58,8 @@ namespace BloodBorne.Context
         {
             return
                 [
-                new Bosses {Name="Cleric Beast", BossDescription="A wild hairy beast that can deal damage to you and break your back", BossInfo="super cool guy",  ImageUrl="cleric.jpg"},
-                new Bosses {Name="Father Gascoigne", BossDescription="A mind turned father made beast, weilding an axe and claws", BossInfo="jkgu", ImageUrl="gascoigne.png" },   
+                new Bosses {Name="Cleric Beast", BossDescription="A wild hairy beast that can deal damage to you and break your back", BossInfo="The majority of the Cleric Beast's attacks consist of swipes with its larger, left arm at close range and jump attacks at a distance. It possesses few attacks that hit behind itself and, therefore, it is wise to stay behind it for the majority of the time.",  ImageUrl="cleric.jpg"},
+                new Bosses {Name="Father Gascoigne", BossDescription="A mind turned father made beast, weilding an axe and claws", BossInfo="The fight has three phases. In the beginning, Father Gascoigne fights with a normal Hunter Axe and his unique Hunter Blunderbuss. At roughly 75-80% health remaining, Father Gascoigne attacks you with a transformed Hunter Axe and his unique Hunter Blunderbuss, introducing charged and longer-reaching attacks.", ImageUrl="gascoigne.png" },   
                 new Bosses {Name="Witch of Hemwick", BossDescription="A powerful witch who guards her coven in Hemwick", BossInfo="evil witch", ImageUrl="hemwick.png" },
                 new Bosses {Name="Vicar Amelia", BossDescription="A nun who has been corrupted by the Beast", BossInfo="crazy nun", ImageUrl="vicar.png" },
                 new Bosses {Name="Rom the Vacuous Spider", BossDescription="A giant spider-like creature that dwells in the Nightmare", BossInfo="big spider", ImageUrl="rom.png" },

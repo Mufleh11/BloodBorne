@@ -1,0 +1,60 @@
+﻿
+@using BloodBorne.Context
+@using BloodBorne.Model
+@using BloodBorne.Components.Shared
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStorage
+
+
+
+
+@*  <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-body bg-light">
+                <h5 class="card-title">@Bosses.Name</h5>
+                <p>
+                     @Bosses.BossInfo
+                  
+                </p>
+</div>
+</div>
+
+</div> *@
+
+
+
+<div class="row g-0">
+    <div class="col-md-3 me-1">
+        <img src="/img/bosses/@Bosses.ImageUrl" onerror="this.onerror=null;this.src='/img/notfound.png';" class="img-fluid img-thumbnail rounded-start" alt="@Bosses.Name" />
+    </div>
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-body bg-light">
+                <h3 class="card-title">@Bosses.Name</h3>
+                
+        </div>
+     </div>
+        <h4>@Bosses.BossInfo</h4>
+   </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public Bosses Bosses { get; set; }
+
+    private List<Bosses> bosses;
+
+    
+
+
+
+
+
+
+
+
+
+
+}
+   

@@ -187,18 +187,24 @@ namespace BloodBorne.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BossList",
+                name: "BossLists",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BossesId = table.Column<int>(type: "INTEGER", nullable: false)
+                    BossesId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BossList", x => x.id);
+                    table.PrimaryKey("PK_BossLists", x => x.id);
                     table.ForeignKey(
-                        name: "FK_BossList_Bosses_BossesId",
+                        name: "FK_BossLists_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BossLists_Bosses_BossesId",
                         column: x => x.BossesId,
                         principalTable: "Bosses",
                         principalColumn: "Id",
@@ -303,9 +309,14 @@ namespace BloodBorne.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BossList_BossesId",
-                table: "BossList",
+                name: "IX_BossLists_BossesId",
+                table: "BossLists",
                 column: "BossesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BossLists_UserId",
+                table: "BossLists",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_BossesId",
@@ -352,7 +363,7 @@ namespace BloodBorne.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BossList");
+                name: "BossLists");
 
             migrationBuilder.DropTable(
                 name: "Reports");

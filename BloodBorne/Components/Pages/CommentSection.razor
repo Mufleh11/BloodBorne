@@ -1,0 +1,108 @@
+﻿@page "/Comment/{id:int}"
+@using BloodBorne.Context
+@using BloodBorne.Model
+@using Microsoft.EntityFrameworkCore
+@inject DatabaseContext DbContext
+
+<div class="row g-0">
+    <div class="col-md-12">
+        <button class="btn btn-primary float-end" @onclick="ShowAddComment">
+            Add Comment
+        </button>
+    </div>
+</div>
+
+@if (showForm)
+{
+    <div class="card">
+        <div class="card-body bg-light">
+             <h4 class="card-title">
+               @*  @(model.Id == 0 ? "Add Comment : Edit Comment" ) *@
+            </h4> 
+            <EditForm OnValidSubmit="Submit" EditContext="editContext">
+                <DataAnnotationsValidator />
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="commentdetail" class="form-label">Name</label>
+                        <InputText class="form-control" placeholder="Comment" @bind-Value="model.CommentDetails" />
+                         <ValidationMessage For="@(() => model.CommentDetails)" />
+                    </div>
+
+
+                </div>
+                <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary float-end">
+                            @(model.Id == 0 ? "Add Comment" : "Edit Comment")
+                        </button>
+                    </div>
+
+            </EditForm>
+                </div>         
+        </div>
+  
+
+
+       @*   <PropertyColumn Property="@(c => c.CommentDetails)" Sortable="true" /> *@
+
+
+
+}
+
+
+
+
+
+
+@code {
+ 
+    [Parameter]
+    public int Id { get; set; }
+
+    private List<Bosses> bosses;
+
+    private List<Comment>? comment;
+    private EditContext editContext;
+    private Comment model;
+    private bool showForm;
+
+
+    private void ShowAddComment()
+    {
+        model = new Comment();
+        editContext = new EditContext(model);
+        showForm = true;
+    }
+
+
+    private async Task Submit()
+
+    {
+        if (model.Id == 0)
+            DbContext.Comment.Add(model);
+
+
+        else
+            DbContext.Comment.Update(model);
+
+
+
+        await DbContext.SaveChangesAsync();
+        await Refresh();
+
+
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+
+    }
+
+
+    private async Task Refresh()
+    {
+        model = new Comment();
+        editContext = new EditContext(model);
+        comment = await DbContext.Comment.ToListAsync();
+    }
+
+}

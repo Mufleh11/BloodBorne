@@ -6,20 +6,32 @@ namespace BloodBorne.Context
 {
     public class DatabaseContext : IdentityDbContext<User>
     {
-        public DbSet<Comment> Comments { get; set; }
+
+        private IWebHostEnvironment _environment;
+
+
+        public DbSet<Comment> Comment { get; set; }
+        public DbSet<BossList> BossLists { get; set; }
 
         public DbSet<Tags> Tags { get; set; }
         public DbSet<Bosses> Bosses { get; set; }
         public DbSet<Report> Reports { get; set; }
-        
 
+
+
+        public DatabaseContext(DbContextOptions<DatabaseContext> options, IWebHostEnvironment environment) : base(options)
+        {
+            _environment = environment;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionbuilder)
         {
-            var folder = Environment.SpecialFolder.MyDocuments;
-            var path = Environment.GetFolderPath(folder);
-            var dbPath = Path.Join(path, "database.db");
-            optionbuilder.UseSqlite($"Data Source={dbPath}");
+            var folder = Path.Combine(_environment.WebRootPath, "database");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            optionbuilder.UseSqlite($"Data Source={folder}/bloodborne.db");
         }
     }
 }

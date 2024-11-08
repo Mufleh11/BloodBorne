@@ -15,17 +15,19 @@
     </div>
 </div>
 
-  <div class="row ">
+<div class="row ">
 @foreach (var bosses in FilteredBosses)
 {
     <div class="col-12 col-md-6 col-lg-4">
         <BossItem Bosses ="bosses" />
+            
     </div>
 }
 </div> 
 
 @code
 {
+    
     private string searchTerm = "";
     private IEnumerable<Bosses> bosses;
 
