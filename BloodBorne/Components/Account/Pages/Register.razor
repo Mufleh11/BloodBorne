@@ -43,7 +43,12 @@
                             <div class="col-md-6">
                                 <label for="age" class="form-label">Age</label>
                                 <InputText type="age" class="form-control" placeholder="Age" @bind-Value="Model.Age" />
+                                <div class="small">
+                                    <ValidationMessage For="@(() => Model!.Age)" />
+                                </div>
                             </div>
+
+
                             <div class="form-group mb-2">
                                 <label for="confirm">Confirm Password</label>
                                 <InputText id="confirm" type="password" class="form-control" placeholder="Confirm Password" @bind-Value="Model.ConfirmPassword" />
@@ -107,12 +112,17 @@
         [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
         public string Email { get; set; } = "";
 
+        //this validates age to make sure its a number
+        [RegularExpression(@"^\d+$", ErrorMessage = "Age must be a numnber.")]
         [Required(ErrorMessage = "Please enter your Age.")]
         public string Age { get; set; } = "";
 
         // DataType attribute Specifies that the password should be treated as sensitive data
         [Required(ErrorMessage = "Please enter a password.")]
         [DataType(DataType.Password)]
+        //Validation added to password to make sure its above 8 characters and includes a number
+        [StringLength(int.MaxValue, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long.")]
+        [RegularExpression(@"(?=.*\d).*$", ErrorMessage = "Password must contain at least one number.")]
         public string Password { get; set; } = "";
      
      //Compare attribute, Compares the confirmation password with the Password property.
