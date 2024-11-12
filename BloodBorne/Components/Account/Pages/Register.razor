@@ -34,21 +34,19 @@
                                 <ValidationMessage For="@(() => Model!.Email)" />
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <label for="age" class="form-label">Age</label>
+                            <InputText type="age" class="form-control" placeholder="Age" @bind-Value="Model.Age" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model!.Age)" />
+                            </div>
+                        </div>
                         <div class="form-group mb-2">
                             <label for="password">Password</label>
                             <InputText id="password" type="password" class="form-control" placeholder="Password" @bind-Value="Model.Password" />
                             <div class="small">
                                 <ValidationMessage For="@(() => Model!.Password)" />
                             </div>
-                            <div class="col-md-6">
-                                <label for="age" class="form-label">Age</label>
-                                <InputText type="age" class="form-control" placeholder="Age" @bind-Value="Model.Age" />
-                                <div class="small">
-                                    <ValidationMessage For="@(() => Model!.Age)" />
-                                </div>
-                            </div>
-
-
                             <div class="form-group mb-2">
                                 <label for="confirm">Confirm Password</label>
                                 <InputText id="confirm" type="password" class="form-control" placeholder="Confirm Password" @bind-Value="Model.ConfirmPassword" />
@@ -68,6 +66,7 @@
 </div>
 
 @code {
+    //Declare variables to store potential identity errors, the registration model, the return URL, a status message, and an error flag.
     private IEnumerable<IdentityError>? identityErrors;
 
     [SupplyParameterFromForm]
@@ -76,28 +75,38 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    private string? statusMessage => identityErrors is null ? null : string.Join(" ", identityErrors.Select(error => error.Description));
+    private string? statusMessage => identityErrors is null ? null : string.Join("", identityErrors.Select(error => error.Description));
     private bool isError;
 
+    //Asynchronous method to handle user registration.
     public async Task RegisterUser(EditContext editContext)
     {
-        var user = Activator.CreateInstance<User>(); ;
+        //Create a new user instance.
+        var user = Activator.CreateInstance<User>();
+
+        //Set the user's email and email confirmation.
         await UserStore.SetUserNameAsync(user, Model.Email, CancellationToken.None);
-        var emailStore = (IUserEmailStore<User>)UserStore;
-        await emailStore.SetEmailAsync(user, Model.Email, CancellationToken.None);
+        await ((IUserEmailStore<User>)UserStore).SetEmailAsync(user, Model.Email, CancellationToken.None);
+
+        //Attempt to create the user with the specified password.
         var result = await UserManager.CreateAsync(user, Model.Password);
 
+        //If the creation is unsuccessful, handle errors.
         if (!result.Succeeded)
         {
+            //Store the errors for later display.
             identityErrors = result.Errors;
             isError = true;
             return;
         }
 
+        //Log a success message.
         Logger.LogInformation("User created a new account with password.");
 
+        //Get the user's ID.
         var userId = await UserManager.GetUserIdAsync(user);
 
+        //Sign the user in and redirect to the specified return URL.
         await SignInManager.SignInAsync(user, isPersistent: false);
         RedirectManager.RedirectTo(ReturnUrl);
     }
@@ -117,7 +126,7 @@
         [Required(ErrorMessage = "Please enter your Age.")]
         public string Age { get; set; } = "";
 
-        // DataType attribute Specifies that the password should be treated as sensitive data
+        //DataType attribute Specifies that the password should be treated as sensitive data
         [Required(ErrorMessage = "Please enter a password.")]
         [DataType(DataType.Password)]
         //Validation added to password to make sure its above 8 characters and includes a number
