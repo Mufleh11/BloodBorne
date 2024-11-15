@@ -7,47 +7,64 @@
 @inject ProtectedSessionStorage ProtectedSessionStorage
 @inject NavigationManager NavigationManager
 
+@* //style="width: 300px; height: 300px; *@
+@* <style>
+    .align-right {
+        text-align: right;
+        border: 0;
+</style> *@
 
-<div class="card h-100">
-    <img src="/img/bosses/@Bosses.ImageUrl" class="card-img-top p-1" alt="@Bosses.Name" onerror="this.onerror = null; this.src='/img/bosses/noboss.png'">
+@* <EditForm Model="quantity" OnSubmit="ShowInfo"> *@
+
+@* <button class="btn btn-primary" @onclick="() => ShowInfo(context)">Info</button> *@
+
+@*   <a @onclick="GoToComment" button type="button" style="margin-right: 10px;" class="btn btn-primary btn-md w-50 ">BossInfo</a>
+            <div class="align-right">
+            <a @onclick="ShowInfo" button type="button" style="margin-right: 10px;" class="btn btn-primary btn-md w-50 ">BossInfo</a>
+            </div> *@
+
+@*   <EditForm Model= "quantity" OnSubmit="AddToList">
+            <button class="btn btn-outline-primary" for="btn-check-outlined">Add</button>
+
+        </EditForm> *@
+
+@* This is how each boss will be displayed and formatted individually. *@
+ <div class="card h-100">
+    <img src="/img/bosses/@Bosses.ImageUrl" class="card-img-top p-1" alt="@Bosses.Name  align-content:center;" onerror="this.onerror = null; this.src='/img/bosses/noboss.png'">
     <div class="card-body d-flex flex-column">
         <h4>@Bosses.Name</h4>
         <div class="card-body d-flex flex-column">
-            <p class="card-text">@Bosses.BossDescription</p>
-            
-        </div>
-
-        <EditForm Model= "quantity" OnSubmit="AddToList"> 
-            <button class="btn btn-outline-primary" for="btn-check-outlined">Add</button>
-
-        </EditForm>
-
-          @* <EditForm Model="quantity" OnSubmit="ShowInfo"> *@
-              
-                 @* <button class="btn btn-primary" @onclick="() => ShowInfo(context)">Info</button> *@
-
-        <a @onclick="GoToComment" button type="button" style="margin-right: 10px;" class="btn btn-primary btn-md w-50 ">BossInfo</a>
-        <style>
-        
-
-           
-
-            .align-right {
-                text-align: right;
-                border: 0;
-       </style>
+            <p class="card-text">@Bosses.BossDescription</p> 
+            @* Button to allow a user to go to boss info *@
             <div class="align-right">
-            <a @onclick="ShowInfo" button type="button" style="margin-right: 10px;" class="btn btn-primary btn-md w-50 ">BossInfo</a>
+                <a @onclick="ShowInfo" button type="button" style="margin-right: 10px;" class="btn btn-primary btn-md w-50 ">BossInfo</a>
             </div>
+        </div>
     </div>
-</div>
+</div> 
+
+
+
+@* <div class="card h-100 shadow-sm rounded border-0" style="width: 18rem; margin: 20px;">
+    <img src="/img/bosses/@Bosses.ImageUrl" class="card-img-top p-2 rounded" alt="@Bosses.Name" onerror="this.onerror = null; this.src='/img/bosses/noboss.png'" style="object-fit: cover; height: 200px;">
+
+    <div class="card-body d-flex flex-column text-center">
+        <h4 class="card-title font-weight-bold">@Bosses.Name</h4>
+
+        <p class="card-text text-muted">@Bosses.BossDescription</p>
+
+        <div class="mt-auto">
+            <a @onclick="ShowInfo" type="button" class="btn btn-primary btn-md w-100" style="margin-top: 10px;">Learn More</a>
+        </div>
+    </div>
+</div> *@
 
 
 
 @code {
     [Parameter]
     public Bosses Bosses { get; set; }
-   
+
 
     // private async Task GetBosses()
     // {
@@ -67,13 +84,13 @@
     {
         ListItem.AddItem(Bosses);
         await ProtectedSessionStorage.SetAsync("List", ListItem.GetItems());
-        
+
     }
-   
+
     //  private void ShowInfo(Bosses bosses)
     // {
     //     NavigationManager.NavigateTo($"/Info/{bosses.Id}");
-       
+
     // }
 
     private void ShowInfo()
@@ -87,5 +104,5 @@
         NavigationManager.NavigateTo($"/Comment/{Bosses.Id}");
 
     }
+
 }
- 

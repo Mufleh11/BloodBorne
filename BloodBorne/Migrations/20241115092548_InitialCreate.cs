@@ -212,7 +212,7 @@ namespace BloodBorne.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comments",
+                name: "Comment",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -225,20 +225,20 @@ namespace BloodBorne.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.PrimaryKey("PK_Comment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_UserId",
+                        name: "FK_Comment_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Comments_Bosses_BossesId",
+                        name: "FK_Comment_Bosses_BossesId",
                         column: x => x.BossesId,
                         principalTable: "Bosses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_Tags_TagsId",
+                        name: "FK_Comment_Tags_TagsId",
                         column: x => x.TagsId,
                         principalTable: "Tags",
                         principalColumn: "Id",
@@ -264,9 +264,9 @@ namespace BloodBorne.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Reports_Comments_CommentId",
+                        name: "FK_Reports_Comment_CommentId",
                         column: x => x.CommentId,
-                        principalTable: "Comments",
+                        principalTable: "Comment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -319,18 +319,18 @@ namespace BloodBorne.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_BossesId",
-                table: "Comments",
+                name: "IX_Comment_BossesId",
+                table: "Comment",
                 column: "BossesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_TagsId",
-                table: "Comments",
+                name: "IX_Comment_TagsId",
+                table: "Comment",
                 column: "TagsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_UserId",
-                table: "Comments",
+                name: "IX_Comment_UserId",
+                table: "Comment",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -372,7 +372,7 @@ namespace BloodBorne.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "Comment");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

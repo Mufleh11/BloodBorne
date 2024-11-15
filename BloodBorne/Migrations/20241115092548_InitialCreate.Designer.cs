@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloodBorne.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241107151347_InitialCreate")]
+    [Migration("20241115092548_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -98,7 +98,7 @@ namespace BloodBorne.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("BloodBorne.Model.Report", b =>

@@ -47,7 +47,7 @@
                             <div class="small">
                                 <ValidationMessage For="@(() => Model!.Password)" />
                             </div>
-                            <div class="form-group mb-2">
+                        <div class="form-group mb-2">
                                 <label for="confirm">Confirm Password</label>
                                 <InputText id="confirm" type="password" class="form-control" placeholder="Confirm Password" @bind-Value="Model.ConfirmPassword" />
                                 <div class="small">
@@ -69,6 +69,8 @@
     //Declare variables to store potential identity errors, the registration model, the return URL, a status message, and an error flag.
     private IEnumerable<IdentityError>? identityErrors;
 
+
+    // Declares a `RegisterModel` property to store form data that user submits
     [SupplyParameterFromForm]
     private RegisterModel Model { get; set; } = new();
 
@@ -113,7 +115,7 @@
 
 
     //Represents a model for user registration, containing properties for email, age, password, and password confirmation.
-    //Validation attributes are used to ensure data integrity making sure no empty fields and provide informative and clear error messages to the user.  
+    //Validation attributes are used to ensure data integrity making sure no empty fields and provide informative and clear error messages to the user.
     private sealed class RegisterModel
     {
         //[EmailAddress] Validates the email address format.
@@ -133,13 +135,13 @@
         [StringLength(int.MaxValue, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long.")]
         [RegularExpression(@"(?=.*\d).*$", ErrorMessage = "Password must contain at least one number.")]
         public string Password { get; set; } = "";
-     
-     //Compare attribute, Compares the confirmation password with the Password property.
+
+        //Compare attribute, Compares the confirmation password with the Password property.
         [Required(ErrorMessage = "Please confirm your password.")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
 
-        
+
     }
 }

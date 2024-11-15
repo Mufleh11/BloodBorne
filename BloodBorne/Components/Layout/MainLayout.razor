@@ -3,7 +3,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="/">My Project</a>
+        <a class="navbar-brand" href="/">Bloodborne</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -13,6 +13,8 @@
                     <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
                 </li>
             </ul>
+
+           @*displays the register, login and logout navbar sections and also using the authorizes shows register and login and after logging in only shows logout*@
             <ul class="nav navbar-nav ml-auto w-100 justify-content-end">
                 <AuthorizeView>
                     <Authorized>
@@ -40,3 +42,5 @@
         @Body
     </div>
 </main>
+
+                       
