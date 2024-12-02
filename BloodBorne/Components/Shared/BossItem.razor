@@ -38,6 +38,11 @@
             @* Button to allow a user to go to boss info *@
             <div class="align-right">
                 <a @onclick="ShowInfo" button type="button" style="margin-right: 10px;" class="btn btn-primary btn-md w-50 ">BossInfo</a>
+                <EditForm Model="quantity" OnSubmit="AddToList">
+                    <button class="btn btn-outline-primary" for="btn-check-outlined">Add</button>
+                    <a @onclick="GoToComment" button type="button" style="margin-right: 10px;" class="btn btn-primary btn-md w-50 ">Comment</a>
+           
+                </EditForm>
             </div>
         </div>
     </div>

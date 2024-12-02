@@ -7,14 +7,11 @@
 
 
 <div>
-   
-
     @foreach (var item in ListItem.GetItems())
     {
         <h4>
             <tr>
                     <td scope="col">@item.Bosses.Name</td>
-
             </tr>
         </h4>
 
@@ -22,15 +19,8 @@
             <button class="btn btn-info mt-1 mt-md-1" @onclick="() => RemoveItem(item)">Remove</button>
 
         </td> 
-
-
-
-
     }
-
     </div>
-
-
 
 
 @code {

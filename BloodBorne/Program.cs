@@ -28,6 +28,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<BossesProvider>();
 builder.Services.AddScoped<ListItem>();
+builder.Services.AddScoped<CommentProvider>();
 
 
 builder.Services.AddDbContext<DatabaseContext>();

@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedSessionStorage ProtectedSessionStorage
 @inject DatabaseContext DbContext
+@inject NavigationManager NavigationManager
 
 
 
@@ -35,22 +36,28 @@
     }
 </div>  *@
 <div>
-    <Information Bosses="bosses" />
+    <Information Bosses="bosses" />   
 </div>
 
 @code
 {
-    
+
+
+
     [Parameter]
     public int Id { get; set; }
 
     private Bosses? bosses;
-
+    public Bosses Bosses;
     protected override void OnInitialized()
     {
         bosses = DbContext.Bosses.SingleOrDefault(b => b.Id == Id);
     }
+    // private void GoToComment()
+    // {
+    //     NavigationManager.NavigateTo($"/Comment/{Bosses.Id}");
 
+    // }
 
     // [Parameter]
     // public Bosses Bosses { get; set; }
