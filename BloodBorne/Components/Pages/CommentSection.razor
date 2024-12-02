@@ -65,6 +65,25 @@
     private Comment model;
     private bool showForm;
     public Comment Comment;
+    private string CommentDetails;
+
+    public Comment Model
+    {
+        get
+        {
+            return model;
+        }
+        set
+        {
+            model = value ?? new Comment();
+          
+            CommentDetails = model.CommentDetails;
+            editContext = new(model);
+        }
+    }
+
+
+    public EventCallback<bool> OnSaved { get; set; }
 
     private void ShowAddComment()
     {
@@ -75,11 +94,14 @@
 
     private async Task Submit()
     {
+       
+
         if (model.Id == 0)
             DbContext.Comment.Add(model);
         else
             DbContext.Comment.Update(model);
         await DbContext.SaveChangesAsync();
+        await OnSaved.InvokeAsync();
         await Refresh();
     }
 
