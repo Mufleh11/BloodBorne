@@ -20,7 +20,7 @@
             <h4 class="card-title">
                 @*  @(model.Id == 0 ? "Add Comment : Edit Comment" ) *@
             </h4>
-            <EditForm OnValidSubmit="Submit" EditContext="editContext">
+            <EditForm OnValidSubmit="CreateComment" EditContext="editContext">
                 <DataAnnotationsValidator />
                 <div class="row g-3">
                     <div class="col-md-3">
@@ -67,6 +67,8 @@
     public Comment Comment;
     private string CommentDetails;
 
+    private User user;
+
     public Comment Model
     {
         get
@@ -76,7 +78,7 @@
         set
         {
             model = value ?? new Comment();
-          
+
             CommentDetails = model.CommentDetails;
             editContext = new(model);
         }
@@ -91,6 +93,17 @@
         editContext = new EditContext(model);
         showForm = true;
     }
+
+    private async Task CreateComment()
+    {
+        
+
+        await CommentProvider.CreateComment(user, CommentDetails);
+
+
+    }
+
+
 
     private async Task Submit()
     {

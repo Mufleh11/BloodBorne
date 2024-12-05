@@ -10,5 +10,6 @@
         public List <Report> Report {  get; set; }
         public DateTime DateTime { get; set; }
 
+    
     }
 }
