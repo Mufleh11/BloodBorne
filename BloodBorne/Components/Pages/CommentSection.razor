@@ -1,11 +1,203 @@
 ﻿@page "/Comment/{id:int}"
 @using BloodBorne.Context
 @using BloodBorne.Model
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @inject DatabaseContext DbContext
 @inject CommentProvider CommentProvider
+@inject TagProvider TagProvider
+@*
+<div>
+    <label for="comment">Comment:</label>
+    <textarea id="comment" @bind="NewComment.CommentDetails" class="form-control"></textarea>
 
-<div class="row g-0">
+    <label for="tags">Select Tags:</label>
+    <select id="tags" class="form-control" @onchange="TagSelectionChanged" multiple>
+        @foreach (var tag in AllTags)
+        {
+            <option value="@tag.Id">@tag.tagName</option>
+        }
+    </select>
+
+    <button @onclick="SubmitComment" class="btn btn-primary mt-2">Submit</button>
+</div>
+
+<h4>All Comments</h4>
+@if (Comments == null || Comments.Count == 0)
+{
+    <p>No comments yet.</p>
+}
+else
+{
+    <ul>
+        @foreach (var comment in Comments)
+        {
+            <li>
+                <strong>@comment.User.UserName</strong> (@comment.DateTime.ToShortDateString()):
+                <p>@comment.CommentDetails</p>
+                <p><strong>Tags:</strong> @string.Join(", ", comment.Tags?.Select(t => t.tag) ?? Enumerable.Empty<string>())</p>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Comment> Comments;
+    private Comment NewComment = new Comment();
+    private List<Tags> AllTags = new List<Tags>();
+    private List<int> SelectedTagIds = new List<int>();
+    public List<Tags> Tags { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Comments = await CommentProvider.GetCommentsAsync();
+        AllTags = await TagProvider.GetAllTagsAsync();
+    }
+
+    private void TagSelectionChanged(ChangeEventArgs e)
+    {
+        var selectedValues = e.Value as IEnumerable<string>;
+
+        if (selectedValues != null)
+        {
+            SelectedTagIds = selectedValues.Select(int.Parse).ToList();
+        }
+    }
+
+    private async Task SubmitComment()
+    {
+        if (!string.IsNullOrWhiteSpace(NewComment.CommentDetails))
+        {
+            var user = await UserManager.GetUserAsync(Context.User); // Get the logged-in user
+            var userId = user?.Id;
+
+            if (userId == null)
+            {
+                // Handle unauthenticated user case
+                return;
+            }
+
+            // Add selected tags to the comment
+            NewComment.Tags = AllTags.Where(tag => SelectedTagIds.Contains(tag.Id)).ToList();
+
+            // Submit comment
+            await CommentProvider.AddCommentAsync(NewComment, userId, new List<string>());
+
+            // Reset the form
+            NewComment = new Comment();
+            SelectedTagIds.Clear();
+
+            // Refresh comments
+            Comments = await CommentProvider.GetCommentsAsync();
+        }
+    }
+} *@
+@*
+<div>
+    <label for="comment">Comment:</label>
+    <textarea id="comment" @bind="NewComment.CommentDetails" class="form-control"></textarea>
+
+    <label for="tags">Tags:</label>
+    
+
+    <button @onclick="SubmitComment" class="btn btn-primary mt-2">Submit</button>
+</div>
+
+<h4>All Comments</h4>
+@if (Comments == null || Comments.Count == 0)
+{
+    <p>No comments yet.</p>
+}
+else
+{
+    <ul>
+        @foreach (var comment in Comments)
+        {
+            <li>
+                <strong>@comment.User.UserName</strong> (@comment.DateTime.ToShortDateString()):
+                <p>@comment.CommentDetails</p>
+                <p><strong>Tags:</strong> @string.Join(", ", comment.Tags.Select(t => t.tag))</p>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Comment> Comments;
+    private Comment NewComment = new Comment();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Comments = await CommentProvider.GetCommentsAsync();
+    }
+
+    private async Task SubmitComment()
+    {
+        if (!string.IsNullOrWhiteSpace(NewComment.CommentDetails))
+        {
+            var user = await UserManager.GetUserAsync(Context.User); // Get the logged-in user
+            var userId = user?.Id;
+
+            if (userId == null)
+            {
+                // Handle unauthenticated user case
+                return;
+            }
+
+            // Parse Tags
+            var tags = string.IsNullOrWhiteSpace(TagInput)
+                ? new List<string>()
+                : TagInput.Split(',').Select(tag => tag.Trim()).ToList();
+
+            // Submit comment
+            await CommentProvider.AddCommentAsync(NewComment, userId, tags);
+
+            // Reset the form
+            NewComment = new Comment();
+
+
+            // Refresh comments
+            Comments = await CommentProvider.GetCommentsAsync();
+        }
+    }
+}
+*@
+
+@*
+<h1>Comments</h1>
+
+<form method="post">
+    <div>
+        <label asp-for="NewComment.UserName"></label>
+        <input asp-for="NewComment.UserName" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="NewComment.Content"></label>
+        <textarea asp-for="NewComment.Content" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<h2>All Comments</h2>
+@if (Model.Comment.Any())
+{
+    <ul>
+        @foreach (var comment in Model.Comment)
+        {
+            <li>
+                <strong>@comment.UserName</strong> (@comment.CreatedAt):
+                <p>@comment.Content</p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No comments yet.</p>
+}
+
+@* <div class="row g-0">
     <div class="col-md-12">
         <button class="btn btn-primary float-end" @onclick="ShowAddComment">
             Add Comment
@@ -19,8 +211,8 @@
        <div class="card-body bg-light">
             <h4 class="card-title">
                 @*  @(model.Id == 0 ? "Add Comment : Edit Comment" ) *@
-            </h4>
-            <EditForm OnValidSubmit="CreateComment" EditContext="editContext">
+  @*           </h4>
+            <EditForm OnValidSubmit="Submit" EditContext="editContext">
                 <DataAnnotationsValidator />
                 <div class="row g-3">
                     <div class="col-md-3">
@@ -39,9 +231,9 @@
             </div>
       </div>
 }
+  *@
 
-
-<div>
+@* <div>
     @foreach (var Comment in comment)
     {
         <h4>
@@ -52,37 +244,40 @@
     }
 
 </div>
+ *@
 
 
-
-
+@*
 @code {
     [Parameter]
     public int Id { get; set; }
-    private List<Bosses> bosses;
+    private Bosses bosses;
     private List<Comment>? comment;
     private EditContext editContext;
     private Comment model;
     private bool showForm;
     public Comment Comment;
     private string CommentDetails;
+    private Tags tags;
+    private DateTime dateTime;
+
 
     private User user;
 
-    public Comment Model
-    {
-        get
-        {
-            return model;
-        }
-        set
-        {
-            model = value ?? new Comment();
+    // public Comment Model
+    // {
+    //     get
+    //     {
+    //         return model;
+    //     }
+    //     set
+    //     {
+    //         model = value ?? new Comment();
 
-            CommentDetails = model.CommentDetails;
-            editContext = new(model);
-        }
-    }
+    //         CommentDetails = model.CommentDetails;
+    //         editContext = new(model);
+    //     }
+    // }
 
 
     public EventCallback<bool> OnSaved { get; set; }
@@ -98,7 +293,7 @@
     {
         
 
-        await CommentProvider.CreateComment(user, CommentDetails);
+        await CommentProvider.CreateComment(user, CommentDetails,tags,bosses,dateTime);
 
 
     }
@@ -130,3 +325,4 @@
         comment = await DbContext.Comment.ToListAsync();
     }
 }
+*@

@@ -75,7 +75,18 @@ namespace BloodBorne.Context
                 ];
 
         }
-
+        private List<Tags> GetTags()
+        {
+            return
+                [
+                 new Tags {tagName="Bossfight" },
+                 new Tags {tagName = "Help" },
+                 new Tags {tagName = "Discussion" },
+                 new Tags {tagName = "Opinion" },
+                 new Tags {tagName = "Humor" },
+                 new Tags { tagName = "Other" }
+                ];
+        }
 
 
     }

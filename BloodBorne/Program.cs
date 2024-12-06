@@ -29,6 +29,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<BossesProvider>();
 builder.Services.AddScoped<ListItem>();
 builder.Services.AddScoped<CommentProvider>();
+builder.Services.AddScoped<TagProvider>();
 
 
 builder.Services.AddDbContext<DatabaseContext>();
