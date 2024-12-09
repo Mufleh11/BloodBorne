@@ -25,28 +25,28 @@ namespace BloodBorne.Context
 
         //}
 
-        public async Task<List<Comment>> GetCommentsAsync()
-        {
-            return await _context.Comment
-                .Include(c => c.Tags)   // Include Tags
-                .Include(c => c.User)   // Include User for displaying usernames
-                .OrderByDescending(c => c.DateTime)
-                .ToListAsync();
-        }
-        public List<string> GetTagNames()
-        {
-            return _context.Tags.Select(tag => tag.tagName).ToList(); // Returns a list of all tag names
-        }
-
         //public async Task<List<Comment>> GetCommentsAsync()
         //{
         //    return await _context.Comment
-        //        .Include(c => c.Tags)      // Load related Tags
-        //        .Include(c => c.Bosses)    // Load related Bosses
-        //        .Include(c => c.User)      // Load User info
+        //        .Include(c => c.Tags)   // Include Tags
+        //        .Include(c => c.User)   // Include User for displaying usernames
         //        .OrderByDescending(c => c.DateTime)
         //        .ToListAsync();
         //}
+        public List<string> GetTagNames()
+        {
+            return _context.Tags.Select(tag => tag.TagName).ToList(); // Returns a list of all tag names
+        }
+
+        public async Task<List<Comment>> GetCommentsAsync()
+        {
+            return await _context.Comment
+                     // Load related Tags
+                .Include(c => c.Bosses)    // Load related Bosses
+                .Include(c => c.User)      // Load User info
+                .OrderByDescending(c => c.DateTime)
+                .ToListAsync();
+        }
 
         public async Task AddCommentAsync(Comment comment)
         {
@@ -64,9 +64,6 @@ namespace BloodBorne.Context
             {
                 throw new Exception("A comment with these details already exists.");
             }
-
-
-
             //var comment = new Comment
             //{ 
             //  CommentDetails = commentDetails,
@@ -80,13 +77,18 @@ namespace BloodBorne.Context
             //_context.Comment.Add(comment);
             //await _context.SaveChangesAsync();
 
-
-            
-
-
         }
 
-      
+
+        //public async Task<List<Comment>> GetAllCommentsAsync()
+        //{
+        //    return await _context.Comment
+        //        .Include(c => c.Tags)
+        //        .Include(c => c.User)
+        //        .ToListAsync();
+        //}
+
+
     }
 
 }

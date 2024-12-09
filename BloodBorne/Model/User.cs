@@ -8,7 +8,7 @@ namespace BloodBorne.Model
         
         public int Age { get; set; }
 
-        public List <Comment> Comment { get; set; }
+        public List <Comment> Comments { get; set; }
 
         public List <Report> Report { get; set; }
 

@@ -23,12 +23,23 @@ namespace BloodBorne.Context
         public async Task Seed()
         {
             await _context.Database.MigrateAsync();
+
             if (!_context.Bosses.Any())
             {
                 var bosses = GetBosses();
                _context.Bosses.AddRange(bosses);
                await _context!.SaveChangesAsync();
-           }
+
+          
+            }
+
+
+            if (!_context.Tags.Any()) 
+            {
+                var tags = GetTags();
+                _context.Tags.AddRange(tags);
+                await _context!.SaveChangesAsync();
+            }
 
 
            //This code is to make the admin user and to make sure the admin users details are correct
@@ -61,7 +72,7 @@ namespace BloodBorne.Context
             return
                 [
                 new Bosses {Name="Cleric Beast", BossDescription="A wild hairy beast that can deal damage to you and break your back", BossInfo="The majority of the Cleric Beast's attacks consist of swipes with its larger, left arm at close range and jump attacks at a distance. It possesses few attacks that hit behind itself and, therefore, it is wise to stay behind it for the majority of the time. Location: Central Yharnam Strategy:\r\nAttack Patterns: The Cleric Beast is a large, slow-moving creature with powerful swipes and a few area-of-effect (AoE) attacks.\r\n                Weaknesses: It is weak to fire and bolt damage. Use fire paper or a firearm with bolt paper to deal extra damage.\r\nTips: Focus on dodging its wide sweeps. Once it roars, it is vulnerable to attack. Keep your distance when it starts charging, but be ready to dodge.",   ImageUrl="cleric.jpg"},
-                new Bosses {Name="Father Gascoigne", BossDescription="A mind turned father made beast, weilding an axe and claws", BossInfo="The fight has three phases. In the beginning, Father Gascoigne fights with a normal Hunter Axe and his unique Hunter Blunderbuss. At roughly 75-80% health remaining, Father Gascoigne attacks you with a transformed Hunter Axe and his unique Hunter Blunderbuss, introducing charged and longer-reaching attacks.", ImageUrl="gascoigne.png" },   
+                new Bosses {Name="Father Gascoigne", BossDescription="A mind turned father made beast, weilding an axe and claws", BossInfo="The fight has three phases. In the beginning, Father Gascoigne fights with a normal Hunter Axe and his unique Hunter Blunderbuss. At roughly 75-80% health remaining, Father Gascoigne attacks you with a transformed Hunter Axe and his unique Hunter Blunderbuss, introducing charged and longer-reaching attacks.", ImageUrl="gascoigne.png" },
                 new Bosses {Name="Witch of Hemwick", BossDescription="A powerful witch who guards her coven in Hemwick", BossInfo="evil witch", ImageUrl="hemwick.png" },
                 new Bosses {Name="Vicar Amelia", BossDescription="A nun who has been corrupted by the Beast", BossInfo="crazy nun", ImageUrl="vicar.png" },
                 new Bosses {Name="Rom the Vacuous Spider", BossDescription="A giant spider-like creature that dwells in the Nightmare", BossInfo="big spider", ImageUrl="rom.png" },
@@ -79,12 +90,12 @@ namespace BloodBorne.Context
         {
             return
                 [
-                 new Tags {tagName="Bossfight" },
-                 new Tags {tagName = "Help" },
-                 new Tags {tagName = "Discussion" },
-                 new Tags {tagName = "Opinion" },
-                 new Tags {tagName = "Humor" },
-                 new Tags { tagName = "Other" }
+                 new Tags {TagName="Bossfight" },
+                 new Tags {TagName = "Help" },
+                 new Tags {TagName = "Discussion" },
+                 new Tags {TagName = "Opinion" },
+                 new Tags {TagName = "Humor" },
+                 new Tags {TagName = "Other" }
                 ];
         }
 

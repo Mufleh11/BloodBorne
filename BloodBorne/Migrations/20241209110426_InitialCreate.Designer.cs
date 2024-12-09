@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloodBorne.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241115092548_InitialCreate")]
+    [Migration("20241209110426_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -84,17 +84,12 @@ namespace BloodBorne.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TagsId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BossesId");
-
-                    b.HasIndex("TagsId");
 
                     b.HasIndex("UserId");
 
@@ -132,11 +127,16 @@ namespace BloodBorne.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("tag")
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TagName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
 
                     b.ToTable("Tags");
                 });
@@ -361,19 +361,11 @@ namespace BloodBorne.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BloodBorne.Model.Tags", "Tags")
-                        .WithMany("Comment")
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BloodBorne.Model.User", "User")
-                        .WithMany("Comment")
+                        .WithMany("Comments")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Bosses");
-
-                    b.Navigation("Tags");
 
                     b.Navigation("User");
                 });
@@ -393,6 +385,13 @@ namespace BloodBorne.Migrations
                     b.Navigation("Comment");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BloodBorne.Model.Tags", b =>
+                {
+                    b.HasOne("BloodBorne.Model.Comment", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("CommentId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -456,16 +455,13 @@ namespace BloodBorne.Migrations
             modelBuilder.Entity("BloodBorne.Model.Comment", b =>
                 {
                     b.Navigation("Report");
-                });
 
-            modelBuilder.Entity("BloodBorne.Model.Tags", b =>
-                {
-                    b.Navigation("Comment");
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("BloodBorne.Model.User", b =>
                 {
-                    b.Navigation("Comment");
+                    b.Navigation("Comments");
 
                     b.Navigation("Report");
                 });

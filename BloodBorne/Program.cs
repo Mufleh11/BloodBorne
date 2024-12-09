@@ -30,6 +30,7 @@ builder.Services.AddScoped<BossesProvider>();
 builder.Services.AddScoped<ListItem>();
 builder.Services.AddScoped<CommentProvider>();
 builder.Services.AddScoped<TagProvider>();
+builder.Services.AddScoped<UserProvider>();
 
 
 builder.Services.AddDbContext<DatabaseContext>();

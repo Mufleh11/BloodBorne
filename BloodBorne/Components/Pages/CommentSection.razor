@@ -1,11 +1,103 @@
 ﻿@page "/Comment/{id:int}"
 @using BloodBorne.Context
-@using BloodBorne.Model
-@using Microsoft.AspNetCore.Identity
+@using BloodBorne.Model;
+@using Microsoft.AspNetCore.Identity;
 @using Microsoft.EntityFrameworkCore
 @inject DatabaseContext DbContext
 @inject CommentProvider CommentProvider
 @inject TagProvider TagProvider
+@inject UserProvider UserProvider
+
+
+@if (Comments != null && Comments.Any())
+{
+    <ul>
+        @foreach (var comment in Comments)
+        {
+            <li>
+               @*  <strong>@(await GetUserEmailAsync(comment.User?.Id))</strong> (@comment.DateTime.ToShortDateString()): *@
+                <p>@comment.CommentDetails</p>
+                <p><strong>Tags:</strong> @string.Join(", ", comment.Tags?.Select(t => t.TagName) ?? Enumerable.Empty<string>())</p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No comments available.</p>
+}
+
+<h4>Add a Comment</h4>
+<EditForm Model="@NewComment" OnValidSubmit="SubmitCommentAsync">
+    <InputTextArea id="commentDetails" @bind-Value="NewComment.CommentDetails" placeholder="Enter your comment here" />
+    <br />
+
+    <label for="tags">Select Tag:</label>
+    <InputSelect id="tags" @bind-Value="SelectedTagId">
+        @foreach (var tag in Tags)
+        {
+            <option value="@tag.Id">@tag.TagName</option>
+        }
+    </InputSelect>
+    <br />
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private List<Comment> Comments;
+    private List<Tags> Tags;
+    private Comment NewComment = new();
+    private int SelectedTagId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Comments = await CommentProvider.GetCommentsAsync();
+        Tags = await TagProvider.GetAllTagsAsync();
+    }
+
+    private async Task<string> GetUserEmailAsync(string userId)
+    {
+        if (string.IsNullOrEmpty(userId))
+            return "Unknown User";
+
+        var user = await UserProvider.GetUserByIdAsync(userId);
+        return user?.Email ?? "Unknown User"; // Use Email directly
+    }
+
+    private async Task SubmitCommentAsync()
+    {
+        if (SelectedTagId > 0)
+        {
+            var selectedTag = Tags.FirstOrDefault(t => t.Id == SelectedTagId);
+         if (selectedTag != null)
+         {
+                NewComment.Tags = new List<Tags> { selectedTag };
+         }
+    }
+
+        // Retrieve the currently logged-in user
+        var currentUser = await UserProvider.GetUserByIdAsync("CURRENT_USER_ID"); // Replace with actual logic
+        if (currentUser != null)
+        {
+            NewComment.User = currentUser;
+            NewComment.DateTime = DateTime.Now;
+
+            
+
+            // Refresh comments
+           
+
+            // Reset form
+            NewComment = new Comment();
+            SelectedTagId = 0;
+        }
+    }
+}
+
+
 @*
 <div>
     <label for="comment">Comment:</label>
@@ -15,7 +107,7 @@
     <select id="tags" class="form-control" @onchange="TagSelectionChanged" multiple>
         @foreach (var tag in AllTags)
         {
-            <option value="@tag.Id">@tag.tagName</option>
+            <option value="@tag.Id">@tag.TagName</option>
         }
     </select>
 
@@ -35,7 +127,7 @@ else
             <li>
                 <strong>@comment.User.UserName</strong> (@comment.DateTime.ToShortDateString()):
                 <p>@comment.CommentDetails</p>
-                <p><strong>Tags:</strong> @string.Join(", ", comment.Tags?.Select(t => t.tag) ?? Enumerable.Empty<string>())</p>
+                <p><strong>Tags:</strong> @string.Join(", ", comment.Tags?.Select(t => t.TagName) ?? Enumerable.Empty<string>())</p>
             </li>
         }
     </ul>
@@ -63,7 +155,12 @@ else
             SelectedTagIds = selectedValues.Select(int.Parse).ToList();
         }
     }
+    private readonly UserManager<User> _userManager;
 
+    public CommentSection(UserManager<User> userManager)
+    {
+        _userManager = userManager;
+    }
     private async Task SubmitComment()
     {
         if (!string.IsNullOrWhiteSpace(NewComment.CommentDetails))
@@ -91,7 +188,7 @@ else
             Comments = await CommentProvider.GetCommentsAsync();
         }
     }
-} *@
+} 
 @*
 <div>
     <label for="comment">Comment:</label>

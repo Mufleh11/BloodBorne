@@ -14,7 +14,7 @@ namespace BloodBorne.Context
 
         public async Task<List<Tags>> GetAllTagsAsync()
         {
-            return await _context.Tags.OrderBy(tag => tag.tagName).ToListAsync();
+            return await _context.Tags.OrderBy(tag => tag.TagName).ToListAsync();
         }
 
         public Tags? GetTagById(int id)
