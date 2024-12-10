@@ -54,6 +54,12 @@ namespace BloodBorne.Context
             _context.Comment.Add(comment);
             await _context.SaveChangesAsync();
         }
+        public async Task UpdateCommentAsync(Comment comment)
+        {
+           
+            _context.Comment.Add(comment);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task CreateComment(User user, string commentDetails, Tags tags, Bosses bosses,DateTime dateTime)
         {

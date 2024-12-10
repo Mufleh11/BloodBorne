@@ -3,6 +3,7 @@
 @using BloodBorne.Model;
 @using Microsoft.AspNetCore.Identity;
 @using Microsoft.EntityFrameworkCore
+@using System.ComponentModel.DataAnnotations
 @inject DatabaseContext DbContext
 @inject CommentProvider CommentProvider
 @inject TagProvider TagProvider
@@ -26,8 +27,8 @@ else
 {
     <p>No comments available.</p>
 }
-
-<h4>Add a Comment</h4>
+@* 
+ <h4>Add a Comment</h4>
 <EditForm Model="@NewComment" OnValidSubmit="SubmitCommentAsync">
     <InputTextArea id="commentDetails" @bind-Value="NewComment.CommentDetails" placeholder="Enter your comment here" />
     <br />
@@ -42,59 +43,129 @@ else
     <br />
 
     <button type="submit">Submit</button>
-</EditForm>
+</EditForm>  *@
 
 @code {
     [Parameter]
     public int Id { get; set; }
+    [Parameter]
+    public Comment? Comment { get; set; }
+
+    // [Parameter]
+    // public Tags? Tags { get; set; }
     private List<Comment> Comments;
-    private List<Tags> Tags;
+    private List<Tags> tags;
     private Comment NewComment = new();
     private int SelectedTagId;
 
-    protected override async Task OnInitializedAsync()
-    {
-        Comments = await CommentProvider.GetCommentsAsync();
-        Tags = await TagProvider.GetAllTagsAsync();
-    }
+    // private NewCommentModel Model { get; set; } = new NewCommentModel();
 
-    private async Task<string> GetUserEmailAsync(string userId)
-    {
-        if (string.IsNullOrEmpty(userId))
-            return "Unknown User";
+    // public async Task SetModelAsync(Comment comment, Tags tags)
+    // {
+    //     Comment = comment;
+    //     Tags = tags;
 
-        var user = await UserProvider.GetUserByIdAsync(userId);
-        return user?.Email ?? "Unknown User"; // Use Email directly
-    }
+    //     Model = new NewCommentModel(comment,tags);
+    // }
 
-    private async Task SubmitCommentAsync()
-    {
-        if (SelectedTagId > 0)
-        {
-            var selectedTag = Tags.FirstOrDefault(t => t.Id == SelectedTagId);
-         if (selectedTag != null)
-         {
-                NewComment.Tags = new List<Tags> { selectedTag };
-         }
-    }
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     Comments = await CommentProvider.GetCommentsAsync();
+    //     Tags = await TagProvider.GetAllTagsAsync();
 
-        // Retrieve the currently logged-in user
-        var currentUser = await UserProvider.GetUserByIdAsync("CURRENT_USER_ID"); // Replace with actual logic
-        if (currentUser != null)
-        {
-            NewComment.User = currentUser;
-            NewComment.DateTime = DateTime.Now;
+    //     Model = new NewCommentModel(Comment,Tags);
+    // }
+
+    // private async Task<string> GetUserEmailAsync(string userId)
+    // {
+    //     if (string.IsNullOrEmpty(userId))
+    //         return "Unknown User";
+
+    //     var user = await UserProvider.GetUserByIdAsync(userId);
+    //     return user?.Email ?? "Unknown User"; // Use Email directly
+    // }
+
+    // private async Task SubmitCommentAsync()
+    // {
+    //     if (SelectedTagId > 0)
+    //     {
+    //         //     var selectedTag = Tags.FirstOrDefault(t => t.Id == SelectedTagId);
+    //         //     if (selectedTag != null)
+    //         //     {
+    //         //         NewComment.Tags = new List<Tags> { selectedTag };
+    //         //     }
+    //     }
+    //     else
+    //     {
+    //         var comment = new Comment
+    //             {
+    //                 CommentDetails = Comment.CommentDetails
+    //             };
+
+
+
+    //         await CommentProvider.AddCommentAsync(comment);
+    //     }
+
+    //     // Retrieve the currently logged-in user
+    //     var currentUser = await UserProvider.GetUserByIdAsync("CURRENT_USER_ID"); // Replace with actual logic
+    //     if (currentUser != null)
+    //     {
+    //         NewComment.User = currentUser;
+    //         NewComment.DateTime = DateTime.Now;
+
+    //         // Reset form
+    //         SelectedTagId = 0;
+    //     }
+    // }
+
+
+   
+    // private sealed class NewCommentModel
+    // {
+    //     [Required(ErrorMessage = "Please enter the currency name.")]
+    //     public string CommentDetails { get; set; } = "";
+
+    //     [Required(ErrorMessage = "Please enter the currency name.")]
+    //     public string TagName { get; set; } = "";
+
+
+    //     public NewCommentModel(Comment comment, Tags tags)
+    //     {
+    //         CommentDetails = comment.CommentDetails;
+    //         TagName = tags.TagName;
+    //     }
+    // }
+
+
+    // private async Task SubmitCommentAsync()
+    // {
+    //     if (SelectedTagId > 0)
+    //     {
+    //         var selectedTag = Tags.FirstOrDefault(t => t.Id == SelectedTagId);
+    //      if (selectedTag != null)
+    //      {
+    //             NewComment.Tags = new List<Tags> { selectedTag };
+    //      }
+    // }
+
+    //     // Retrieve the currently logged-in user
+    //     var currentUser = await UserProvider.GetUserByIdAsync("CURRENT_USER_ID"); // Replace with actual logic
+    //     if (currentUser != null)
+    //     {
+    //         NewComment.User = currentUser;
+    //         NewComment.DateTime = DateTime.Now;
 
             
 
-            // Refresh comments
+    //         // Refresh comments
            
 
-            // Reset form
-            NewComment = new Comment();
-            SelectedTagId = 0;
-        }
-    }
+    //         // Reset form
+    //         NewComment = new Comment();
+    //         SelectedTagId = 0;
+    //     }
+    // }
 }
 
 
