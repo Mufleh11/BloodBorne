@@ -4,10 +4,12 @@
     {
         public int Id { get; set; }
         public string CommentDetails { get; set; }
-        public List <Tags> Tags { get; set; }
+        public Tags Tags { get; set; }
         public Bosses Bosses { get; set; }
         public User User { get; set; }
         public List <Report> Report {  get; set; }
         public DateTime DateTime { get; set; }
+        public int Likes { get; set; } 
+        public int Dislikes { get; set; }
     }
 }

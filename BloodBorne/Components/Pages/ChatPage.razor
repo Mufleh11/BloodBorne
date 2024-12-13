@@ -1,0 +1,183 @@
+﻿@using BloodBorne.Context
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager Navigation
+@inject IHttpContextAccessor HttpContextAccessor
+@inject CommentProvider CommentProvider
+@inject TagProvider TagProvider
+@using BloodBorne.Model
+@* 
+<AuthorizeView>
+    <Authorized>
+        <div class="comment-form">
+            <EditForm Model="Model" OnValidSubmit="@SubmitComment">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="CommentDetails">Comment Details:</label>
+                    <textarea id="CommentDetails" class="form-control" @bind-Value="Model.CommentDetails"></textarea>
+                    <ValidationMessage For="() => Model.CommentDetails" />
+                </div>
+
+                <div class="form-group">
+                    <label for="TagName">Select Tag:</label>
+                    <InputSelect id="TagName" class="form-control" @bind-Value="Model.TagName">
+                        @foreach (var tag in Tags)
+                        {
+                            <option value="@tag.TagName">@tag.TagName</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Model.TagName" />
+                </div>
+
+                <div class="form-group">
+                    <label for="BossName">Select Boss:</label>
+                    <InputSelect id="BossName" class="form-control" @bind-Value="Model.BossName">
+                        @foreach (var boss in Bosses)
+                        {
+                            <option value="@boss.Name">@boss.Name</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Model.BossName" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </EditForm>
+        </div>
+
+        <div class="comments-section">
+            <h3>Comments</h3>
+            @if (Comments.Any())
+            {
+                @foreach (var comment in Comments)
+                {
+                    <div class="comment">
+                        <p>@comment.CommentDetails</p>
+                        <p><b>Tag:</b> @string.Join(", ", comment.Tags.Select(t => t.TagName))</p>
+                        <p><b>Boss:</b> @comment.Bosses?.Name</p>
+                        <div class="comment-actions">
+                            <button class="btn btn-success" @onclick="@(() => LikeComment(comment.Id))">👍 Like (@comment.Likes)</button>
+                            <button class="btn btn-danger" @onclick="@(() => DislikeComment(comment.Id))">👎 Dislike (@comment.Dislikes)</button>
+                            <button class="btn btn-warning" @onclick="@(() => ReportComment(comment))">🚩 Report</button>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No comments available. Be the first to comment!</p>
+            }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <p>You must be logged in to leave comments or view this section.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+<Modal IsVisible="@ReportModalVisible" OnClose="CloseReportModal">
+    <div class="modal-header">
+        <h5 class="modal-title">Report Comment</h5>
+    </div>
+    <div class="modal-body">
+        <textarea @bind="@ReportReason" class="form-control" placeholder="Enter your reason for reporting..."></textarea>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" @onclick="CloseReportModal">Cancel</button>
+        <button class="btn btn-primary" @onclick="SubmitReport">Submit</button>
+    </div>
+</Modal> *@
+
+@* @code {
+    private CommentModel Model { get; set; } = new();
+    private List<Comment> Comments { get; set; } = new();
+    private List<Tags> Tags { get; set; } = new();
+    private List<Bosses> Bosses { get; set; } = new();
+
+    private bool ReportModalVisible = false;
+    private Comment? CommentToReport;
+    private string ReportReason = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tags = await TagProvider.GetAllTagsAsync();
+        Comments = await CommentProvider.GetCommentsAsync();
+        // Assuming BossProvider exists to fetch bosses
+        Bosses = await BossesProvider.GetAllBossesAsync();
+    } *@
+
+    // private async Task SubmitComment()
+    // {
+    //     var comment = new Model.Comment
+    //     {
+    //         CommentDetails = Model.CommentDetails,
+    //         Tags = Tags.Where(tag => tag.TagName == Model.TagName).ToList(),
+    //         Bosses = Bosses.FirstOrDefault(boss => boss.Name == Model.BossName),
+    //         DateTime = DateTime.Now,
+    //         User = await GetCurrentUserAsync(),
+    //     };
+
+    //     await CommentProvider.AddCommentAsync(comment);
+    //     Comments.Add(comment);
+    //     Model = new Comment(); // Reset the form
+    // }
+
+    // private async Task@* <User?> *@ GetCurrentUserAsync()
+    // {
+    //     var userId = HttpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+    //     return string.IsNullOrEmpty(userId) ? null : await UserProvider.GetUserByIdAsync(userId);
+    // }
+
+    // private void LikeComment(int commentId)
+    // {
+    //     var comment = Comments.FirstOrDefault(c => c.Id == commentId);
+    //     if (comment is not null && !comment.LikedBy.Contains(GetCurrentUserId()))
+    //     {
+    //         comment.Likes++;
+    //         comment.LikedBy.Add(GetCurrentUserId());
+    //     }
+    // }
+
+    // private void DislikeComment(int commentId)
+    // {
+    //     var comment = Comments.FirstOrDefault(c => c.Id == commentId);
+    //     if (comment is not null && !comment.DislikedBy.Contains(GetCurrentUserId()))
+    //     {
+    //         comment.Dislikes++;
+    //         comment.DislikedBy.Add(GetCurrentUserId());
+    //     }
+    // }
+
+    private void ReportComment(Comment comment)
+    {
+        CommentToReport = comment;
+        ReportReason = "";
+        ReportModalVisible = true;
+    }
+
+    // private async Task SubmitReport()
+    // {
+    //     if (CommentToReport is not null)
+    //     {
+    //         var report = new Report
+    //         {
+    //             Comment = CommentToReport,
+    //             Reason = ReportReason,
+    //             DateTime = DateTime.Now,
+    //             User = await GetCurrentUserAsync()
+    //         };
+
+    //         await ReportProvider.AddReportAsync(report);
+    //         CloseReportModal();
+    //     }
+    // }
+
+    private void CloseReportModal()
+    {
+        ReportModalVisible = false;
+    }
+
+    private string GetCurrentUserId()
+    {
+        return HttpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+    }
+}

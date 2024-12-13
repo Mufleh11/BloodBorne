@@ -68,6 +68,19 @@ namespace BloodBorne.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    TagName = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -205,9 +218,12 @@ namespace BloodBorne.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     CommentDetails = table.Column<string>(type: "TEXT", nullable: false),
+                    TagsId = table.Column<int>(type: "INTEGER", nullable: false),
                     BossesId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: true),
-                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Likes = table.Column<int>(type: "INTEGER", nullable: false),
+                    Dislikes = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -221,6 +237,12 @@ namespace BloodBorne.Migrations
                         name: "FK_Comment_Bosses_BossesId",
                         column: x => x.BossesId,
                         principalTable: "Bosses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comment_Tags_TagsId",
+                        column: x => x.TagsId,
+                        principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -249,25 +271,6 @@ namespace BloodBorne.Migrations
                         principalTable: "Comment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tags",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    TagName = table.Column<string>(type: "TEXT", nullable: false),
-                    CommentId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tags_Comment_CommentId",
-                        column: x => x.CommentId,
-                        principalTable: "Comment",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -323,6 +326,11 @@ namespace BloodBorne.Migrations
                 column: "BossesId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comment_TagsId",
+                table: "Comment",
+                column: "TagsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comment_UserId",
                 table: "Comment",
                 column: "UserId");
@@ -336,11 +344,6 @@ namespace BloodBorne.Migrations
                 name: "IX_Reports_UserId",
                 table: "Reports",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tags_CommentId",
-                table: "Tags",
-                column: "CommentId");
         }
 
         /// <inheritdoc />
@@ -368,9 +371,6 @@ namespace BloodBorne.Migrations
                 name: "Reports");
 
             migrationBuilder.DropTable(
-                name: "Tags");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -381,6 +381,9 @@ namespace BloodBorne.Migrations
 
             migrationBuilder.DropTable(
                 name: "Bosses");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
         }
     }
 }
