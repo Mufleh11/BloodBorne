@@ -187,7 +187,7 @@ namespace BloodBorne.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BossLists",
+                name: "BossItems",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -197,14 +197,14 @@ namespace BloodBorne.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BossLists", x => x.id);
+                    table.PrimaryKey("PK_BossItems", x => x.id);
                     table.ForeignKey(
-                        name: "FK_BossLists_AspNetUsers_UserId",
+                        name: "FK_BossItems_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_BossLists_Bosses_BossesId",
+                        name: "FK_BossItems_Bosses_BossesId",
                         column: x => x.BossesId,
                         principalTable: "Bosses",
                         principalColumn: "Id",
@@ -221,7 +221,6 @@ namespace BloodBorne.Migrations
                     TagsId = table.Column<int>(type: "INTEGER", nullable: false),
                     BossesId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: true),
-                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Likes = table.Column<int>(type: "INTEGER", nullable: false),
                     Dislikes = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -311,13 +310,13 @@ namespace BloodBorne.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BossLists_BossesId",
-                table: "BossLists",
+                name: "IX_BossItems_BossesId",
+                table: "BossItems",
                 column: "BossesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BossLists_UserId",
-                table: "BossLists",
+                name: "IX_BossItems_UserId",
+                table: "BossItems",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -365,7 +364,7 @@ namespace BloodBorne.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BossLists");
+                name: "BossItems");
 
             migrationBuilder.DropTable(
                 name: "Reports");

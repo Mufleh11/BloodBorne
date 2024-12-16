@@ -4,472 +4,357 @@
 @using Microsoft.AspNetCore.Identity;
 @using Microsoft.EntityFrameworkCore
 @using System.ComponentModel.DataAnnotations
+@using System.Security.Claims;
 @inject DatabaseContext DbContext
 @inject CommentProvider CommentProvider
 @inject TagProvider TagProvider
 @inject UserProvider UserProvider
 @inject BossesProvider BossesProvider
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-@if (Comments != null )
-{
-    <ul>
-        @foreach (var comment in Comments)
+
+
+
+<main class="container-fluid">
+    <h1>@bossName Chat!</h1> <!-- Display Boss Name with "chat" -->
+
+   @*  Display for the search box  *@
+    <div class="dark-form">
+        <label for="tagSearch" class="dark-form">Search</label>
+        <input type="text" id="tagSearch" class="form-control" @bind="searchTerm" placeholder="Enter a tag or comment keyword..." />
+    </div>
+
+
+    <div class="com">
+        @if (isAuthenticated)
         {
-            <li>
-                 
-                  <p>@comment.CommentDetails</p>
-                  
-            </li>
+            <div class="row g-0">
+                <div class="col-md-12">
+                    <button class="btn btn-dark float-end" @onclick="ShowAddComment">
+                        Click To Enter A Comment
+                    </button>
+                </div>
+            </div>
         }
-    </ul>
-}
-else
-{
-    <h4>sdauhdsa</h4>
-}
 
-<h4>Add a Comment</h4>
-<div class="dark-form">
-    <EditForm Model="@Model" OnValidSubmit="SubmitComment">
-    
-        <div class="form-group">
-            <label for="CommentDetails">Comment Details:</label>
-            <InputText id="CommentDetails" class="form-control dark-input" @bind-Value="@Model.CommentDetails" />
-            <ValidationMessage For="@(() => Model.CommentDetails)" />
-        </div>
+        @if (showForm) // Check if the comment form should be displayed
+        {
+            <div class="card-body">
+                <!-- A form to add a new comment -->
+                <EditForm Model="@Model" OnValidSubmit="SubmitComment">
+                    <!-- Input for the comment text -->
+                    <div class="dark-form">
+                        <label for="CommentDetails" class="form-label">Please enter here:</label>
+                        <InputText id="CommentDetails" class="styled-textbox"
+                                   @bind-Value="@Model.CommentDetails" />
+                        <!-- Validation message for the CommentDetails field -->
+                        <ValidationMessage For="@(() => Model.CommentDetails)" />
+                    </div>
+                    <!-- Dropdown for selecting a tag -->
+                    <div class="dark-form">
+                        <label for="tags" class="form-label">Select Tag:</label>
+                        <InputSelect id="tags" class=" styled-select" @bind-Value="Model.TagId">
+                            @foreach (var tag in Tags) // Iterate through available tags
+                            {
+                                <option value="@tag.Id">@tag.TagName</option>
+                            }
+                        </InputSelect>
+                        <!-- Validation message for the TagId field -->
+                        <ValidationMessage For="@(() => Model.TagId)" />
+                    </div>
+                    <!-- Submit button for the form -->
+                    <div>
+                        <button type="submit" class=" styled-submit">Submit Comment</button>
+                    </div>
+                </EditForm>
+            </div>
+        }
+    </div>
 
-        <div class="form-group">
-            <label for="TagName">Select Tag:</label>
-            <InputSelect id="tags" class="form-control dark-input" @bind-Value="@Model.TagId">
-                @foreach (var tag in Tags)
+    @if (Comments != null) // Check if there are any comments to display
+    {
+        {
+            <!-- List to display all comments -->
+            <ul class="comment-list">
+                @foreach (var comment in FilteredComments) // Iterate through the filtered comments
                 {
-                    <option value="@tag.Id">@tag.TagName</option>
+                    <li>
+                        <!-- Each comment is displayed in a card -->
+                        <div class="card">
+                            <!-- Header of the card, showing the username -->
+                            <div class="card-header">
+                                <h4>
+                                    <span class="badge bg-secondary">
+                                        @comment.User.UserName
+                                    </span>
+                               </h4>
+                            </div>
+                            <!-- Body of the card, showing tag and comment details -->
+                            <div class="card-body">
+                                <h4>
+                                    <span class="badge bg-info">
+                                        @comment.Tags.TagName
+                                    </span>
+                                </h4>
+                                <p>@comment.CommentDetails</p>
+                            </div>
+                            <!-- Footer of the card, showing likes and dislikes -->
+                            <div class="card-footer">
+                                <span>
+                                    <button class="btn btn-success" @onclick="() => LikeComment(comment.Id)">👍 Like</button> @comment.Likes
+                                </span>
+                                <span>
+                                    <button class="btn btn-danger" @onclick="() => DislikeComment(comment.Id)">👎 Dislike</button> @comment.Dislikes
+                                </span>
+                            </div>
+                        </div>
+                    </li>
                 }
-            </InputSelect>
-            <ValidationMessage For="@(() => Model.TagId)" />
-        </div>
-
-        <div>
-        <button type="submit" class="btn btn-dark">Submit Comment</button>
-        </div>
-    </EditForm>
-</div>
-
-
-
+            </ul>
+        }
+    }
+    else
+    {
+        <!-- Message displayed if there are no comments -->
+        <h4>No Comments Currently</h4>
+    }
+ 
+</main>
+@* 
+ class="validation-message" *@
 @code {
+    // Parameter to receive an identifier for the boss
     [Parameter]
     public int Id { get; set; }
 
+    // Parameter to receive a single comment, if applicable
     [Parameter]
     public Comment? Comment { get; set; }
 
+    [Parameter]
+    public User? User { get; set; }
+
+    // Collection of all comments for the current entity to allow me to iterate through it
     private IEnumerable<Comment> Comments;
 
+    // List of available tags for categorizing comments
     public List<Tags> Tags { get; set; }
 
+    // Model for binding user input when adding a new comment
     private CommentModel Model { get; set; } = new CommentModel();
 
+    // Flag to determine if the user is authenticated
+    private bool isAuthenticated;
+
+    // Flag to control the visibility of the comment input form
+    private bool showForm;
+
+    private string searchTerm = "";   // Search term entered by the user for filtering comments
+
+    public string bossName;  // Store the boss name
+
+
+    // Private field to hold the list of filtered comments
+    private IEnumerable<Comment> filteredComments;
+
+    // Public property to access and filter comments
+    private IEnumerable<Comment> FilteredComments
+    {
+        //  Filters the comments based on the search term entered by the user
+        get
+        {
+            return filteredComments.Where(GetSearchCriteria);
+        }
+        // Sets the filtered comments when a new collection is assigned
+        set
+        {
+            filteredComments = value;
+        }
+    }
+
+    // Method to determine if a comment matches the search term
+    private bool GetSearchCriteria(Comment comments)
+    {
+        // If the search term is empty or whitespace, return true for all comments (no filtering)
+        if (string.IsNullOrWhiteSpace(searchTerm)) return true;
+
+        // Check if the search term exists in the comment details or tag name (case insensitive)
+        // This ensures that the comment details are checked for the entered search term
+        // This allows searching by both comment details and the associated tag name
+        if (comments.CommentDetails.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        if (comments.Tags?.TagName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true)
+        {
+            return true;
+        }
+
+        // If no matches are found, return false (comment doesn't match the search criteria)
+        return false;
+    }
+
+
+    // Method to handle the Like button click
+    private async Task LikeComment(int commentId)
+    {
+        // Find the comment by ID
+        var comment = Comments.FirstOrDefault(c => c.Id == commentId);
+        if (comment != null)
+        {
+            // Increment the Likes count
+            comment.Likes++;
+
+            // Save the updated comment to the database
+            await CommentProvider.UpdateCommentAsync(comment);
+
+
+            StateHasChanged(); // Force the component to re-render
+        }
+    }
+
+    // Method to handle the Dislike button click
+    private async Task DislikeComment(int commentId)
+    {
+        // Find the comment by ID
+        var comment = Comments.FirstOrDefault(c => c.Id == commentId);
+        if (comment != null)
+        {
+            // Increment the Dislikes count
+            comment.Dislikes++;
+
+            // Save the updated comment to the database
+            await CommentProvider.UpdateCommentAsync(comment);
+
+     
+
+            StateHasChanged(); // Force the component to re-render
+        }
+    }
+
+
+
+    // method that runs when the component is initialized (page loads)
     protected override async Task OnInitializedAsync()
     {
+        // Load all available tags (categories for comments)
         Tags = await TagProvider.GetAllTagsAsync();
-        
+
+        // Load all comments associated with the current entity
+        Comments = await CommentProvider.GetCommentsAsync();
+
+        // Fetch the boss details (name)
+        var boss = await BossesProvider.GetBossByIdAsync(Id);
+        if (boss != null)
+        {
+            bossName = boss.Name;  // Set the boss name for display
+        }
+
+        // Filter comments by the BossId (only show comments for this specific Boss)
+        filteredComments = Comments.Where(c => c.Bosses.Id == Id);
+
+        // Get the authentication state (user information) from the authentication provider
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+       @*    var username = authState!.User!.Identity!.Name!;
+        user = UserProvider.GetUserByUsernameAsync(username)!; *@
+
+        // Check if the user is logged in (authenticated)
+        isAuthenticated = user?.Identity?.IsAuthenticated ?? false;
+
+
+        Model.BossId = Id; // Set the BossId from the route parameter
+
     }
 
 
-    private async Task<string> GetUserEmailAsync(string userId)
-    {
-        if (string.IsNullOrEmpty(userId))
-            return "Unknown User";
+    
 
-        var user = await UserProvider.GetUserByIdAsync(userId);
-        return user?.Email ?? "Unknown User"; // Use Email directly
-    }
-
-
+    // Method to handle the form submission when adding a new comment
     private async Task SubmitComment()
     {
+        // Retrieve the tag based on the selected TagId
+        var Tag = await TagProvider.GetTagByIdAsync(Model.TagId); // Use an asynchronous method to get the Tag object
 
-        var Tag = TagProvider.GetTagById(Model.TagId);
-        var BossId = BossesProvider.GetBossesById(Model.BossId);
-        var user = await UserProvider.GetUserByUsernameAsync(Model.Username);
-        var comment = new Comment();
+        // Retrieve the BossId (already passed through the route or model)
+        var BossId = new Bosses { Id = Model.BossId }; // Or fetch the full Boss object if needed
 
-        comment.CommentDetails = Model.CommentDetails;
-        comment.Tags = Tag;
-        comment.Bosses = BossId;
-        comment.User = user;
+        @*      var user = await UserProvider.GetUserByIdAsync(Model.UserId); *@
 
+        // Get the current user's ID
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        // Retrieve the user ID from the claims
+        var userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        // Create a User object using the userId
+        var user = new User { Id = userId };
+        //pass the id value taken into the models value to then transfer that aswell
+        
+
+        // Create a new Comment object with the form data
+        var comment = new Comment
+            {
+                CommentDetails = Model.CommentDetails,
+                Tags = Tag,
+                Bosses = new Bosses { Id = Model.BossId }, // Use the BossId from the route
+                User = user, 
+                Report = new List<Report>() // Assuming reports are empty initially
+            };
+
+        // Save the new comment to the database or data source
         await CommentProvider.AddCommentAsync(comment);
+
+
+
+        // Reset the form model after submitting the comment
         Model = new CommentModel();
     }
 
+    // Nested class that represents the model for the comment input form
     private sealed class CommentModel
     {
-        [Required(ErrorMessage = "Please enter the currency name.")]
+        // Represents the text of the comment (required input)
+        [Required(ErrorMessage = "Please enter the comment details.")]
         public string CommentDetails { get; set; } = "";
 
-        [Required(ErrorMessage = "Please enter the currency name.")]
+        // Represents the selected tag ID (required input)
+        [Required(ErrorMessage = "Please select a tag.")]
         public int TagId { get; set; }
 
-        [Required(ErrorMessage = "Please enter the currency name.")]
+        // Represents the associated boss ID for the comment (required input)
+        [Required]
         public int BossId { get; set; }
 
-        [Required(ErrorMessage = "Please enter the currency name.")]
-        public string Username { get; set; }
+        // Represents the username of the commenter (required input)
+        [Required]
+        public string UserId { get; set; }
 
+        // Default constructor for creating a new, empty CommentModel
         public CommentModel()
         {
 
         }
 
-        public CommentModel(Comment comment, Tags tags, Bosses bosses,User user)
+        // Constructor for populating the CommentModel from existing comment data
+        public CommentModel(Comment comment, Tags tags, Bosses bosses, User user)
         {
             CommentDetails = comment.CommentDetails;
             TagId = tags.Id;
             BossId = bosses.Id;
-            Username = user.UserName;
-
-        }
-
-    }
-} 
-
-
-
-
-
-
-
-
-
-@* // private List<Comment> Comments;
-    // private List<Tags> Tags;
-    // private Comment NewComment = new();
-    // private int SelectedTagId; *@
-
-@*
-<div>
-    <label for="comment">Comment:</label>
-    <textarea id="comment" @bind="NewComment.CommentDetails" class="form-control"></textarea>
-
-    <label for="tags">Select Tags:</label>
-    <select id="tags" class="form-control" @onchange="TagSelectionChanged" multiple>
-        @foreach (var tag in AllTags)
-        {
-            <option value="@tag.Id">@tag.TagName</option>
-        }
-    </select>
-
-    <button @onclick="SubmitComment" class="btn btn-primary mt-2">Submit</button>
-</div>
-
-<h4>All Comments</h4>
-@if (Comments == null || Comments.Count == 0)
-{
-    <p>No comments yet.</p>
-}
-else
-{
-    <ul>
-        @foreach (var comment in Comments)
-        {
-            <li>
-                <strong>@comment.User.UserName</strong> (@comment.DateTime.ToShortDateString()):
-                <p>@comment.CommentDetails</p>
-                <p><strong>Tags:</strong> @string.Join(", ", comment.Tags?.Select(t => t.TagName) ?? Enumerable.Empty<string>())</p>
-            </li>
-        }
-    </ul>
-}
-
-@code {
-    private List<Comment> Comments;
-    private Comment NewComment = new Comment();
-    private List<Tags> AllTags = new List<Tags>();
-    private List<int> SelectedTagIds = new List<int>();
-    public List<Tags> Tags { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Comments = await CommentProvider.GetCommentsAsync();
-        AllTags = await TagProvider.GetAllTagsAsync();
-    }
-
-    private void TagSelectionChanged(ChangeEventArgs e)
-    {
-        var selectedValues = e.Value as IEnumerable<string>;
-
-        if (selectedValues != null)
-        {
-            SelectedTagIds = selectedValues.Select(int.Parse).ToList();
+            UserId = user.Id;
         }
     }
-    private readonly UserManager<User> _userManager;
-
-    public CommentSection(UserManager<User> userManager)
-    {
-        _userManager = userManager;
-    }
-    private async Task SubmitComment()
-    {
-        if (!string.IsNullOrWhiteSpace(NewComment.CommentDetails))
-        {
-            var user = await UserManager.GetUserAsync(Context.User); // Get the logged-in user
-            var userId = user?.Id;
-
-            if (userId == null)
-            {
-                // Handle unauthenticated user case
-                return;
-            }
-
-            // Add selected tags to the comment
-            NewComment.Tags = AllTags.Where(tag => SelectedTagIds.Contains(tag.Id)).ToList();
-
-            // Submit comment
-            await CommentProvider.AddCommentAsync(NewComment, userId, new List<string>());
-
-            // Reset the form
-            NewComment = new Comment();
-            SelectedTagIds.Clear();
-
-            // Refresh comments
-            Comments = await CommentProvider.GetCommentsAsync();
-        }
-    }
-}
-@*
-<div>
-    <label for="comment">Comment:</label>
-    <textarea id="comment" @bind="NewComment.CommentDetails" class="form-control"></textarea>
-
-    <label for="tags">Tags:</label>
-
-
-    <button @onclick="SubmitComment" class="btn btn-primary mt-2">Submit</button>
-</div>
-
-<h4>All Comments</h4>
-@if (Comments == null || Comments.Count == 0)
-{
-    <p>No comments yet.</p>
-}
-else
-{
-    <ul>
-        @foreach (var comment in Comments)
-        {
-            <li>
-                <strong>@comment.User.UserName</strong> (@comment.DateTime.ToShortDateString()):
-                <p>@comment.CommentDetails</p>
-                <p><strong>Tags:</strong> @string.Join(", ", comment.Tags.Select(t => t.tag))</p>
-            </li>
-        }
-    </ul>
-}
-
-@code {
-    private List<Comment> Comments;
-    private Comment NewComment = new Comment();
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        Comments = await CommentProvider.GetCommentsAsync();
-    }
-
-    private async Task SubmitComment()
-    {
-        if (!string.IsNullOrWhiteSpace(NewComment.CommentDetails))
-        {
-            var user = await UserManager.GetUserAsync(Context.User); // Get the logged-in user
-            var userId = user?.Id;
-
-            if (userId == null)
-            {
-                // Handle unauthenticated user case
-                return;
-            }
-
-            // Parse Tags
-            var tags = string.IsNullOrWhiteSpace(TagInput)
-                ? new List<string>()
-                : TagInput.Split(',').Select(tag => tag.Trim()).ToList();
-
-            // Submit comment
-            await CommentProvider.AddCommentAsync(NewComment, userId, tags);
-
-            // Reset the form
-            NewComment = new Comment();
-
-
-            // Refresh comments
-            Comments = await CommentProvider.GetCommentsAsync();
-        }
-    }
-}
-*@
-
-@*
-<h1>Comments</h1>
-
-<form method="post">
-    <div>
-        <label asp-for="NewComment.UserName"></label>
-        <input asp-for="NewComment.UserName" class="form-control" />
-    </div>
-    <div>
-        <label asp-for="NewComment.Content"></label>
-        <textarea asp-for="NewComment.Content" class="form-control"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-<h2>All Comments</h2>
-@if (Model.Comment.Any())
-{
-    <ul>
-        @foreach (var comment in Model.Comment)
-        {
-            <li>
-                <strong>@comment.UserName</strong> (@comment.CreatedAt):
-                <p>@comment.Content</p>
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>No comments yet.</p>
-}
-
-@* <div class="row g-0">
-    <div class="col-md-12">
-        <button class="btn btn-primary float-end" @onclick="ShowAddComment">
-            Add Comment
-        </button>
-    </div>
-</div>
-
-@if (showForm)
-{
- <div class="card">
-       <div class="card-body bg-light">
-            <h4 class="card-title">
-                @*  @(model.Id == 0 ? "Add Comment : Edit Comment" ) *@
-  @*           </h4>
-            <EditForm OnValidSubmit="Submit" EditContext="editContext">
-                <DataAnnotationsValidator />
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label for="commentdetail" class="form-label">Enter your Comment</label>
-                        <InputText class="form-control" placeholder="Comment" @bind-Value="model.CommentDetails" />
-                        <ValidationMessage For="@(() => model.CommentDetails)" />
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <button type="button" style="margin-right: 10px;" class="btn btn-primary btn-md w-50 ">
-                        @(model.Id == 0 ? "Add Comment" : "Edit Comment")
-                    </button>
-                </div>
-            </EditForm>
-            </div>
-      </div>
-}
-  *@
-
-@* <div>
-    @foreach (var Comment in comment)
-    {
-        <h4>
-
-            @Comment.CommentDetails
-
-        </h4>
-    }
-
-</div>
- *@
-
-
-@*
-@code {
-    [Parameter]
-    public int Id { get; set; }
-    private Bosses bosses;
-    private List<Comment>? comment;
-    private EditContext editContext;
-    private Comment model;
-    private bool showForm;
-    public Comment Comment;
-    private string CommentDetails;
-    private Tags tags;
-    private DateTime dateTime;
-
-
-    private User user;
-
-    // public Comment Model
-    // {
-    //     get
-    //     {
-    //         return model;
-    //     }
-    //     set
-    //     {
-    //         model = value ?? new Comment();
-
-    //         CommentDetails = model.CommentDetails;
-    //         editContext = new(model);
-    //     }
-    // }
-
-
-    public EventCallback<bool> OnSaved { get; set; }
-
     private void ShowAddComment()
     {
-        model = new Comment();
-        editContext = new EditContext(model);
+
         showForm = true;
     }
 
-    private async Task CreateComment()
-    {
-
-
-        await CommentProvider.CreateComment(user, CommentDetails,tags,bosses,dateTime);
-
-
-    }
-
-
-
-    private async Task Submit()
-    {
-
-
-        if (model.Id == 0)
-            DbContext.Comment.Add(model);
-        else
-            DbContext.Comment.Update(model);
-        await DbContext.SaveChangesAsync();
-        await OnSaved.InvokeAsync();
-        await Refresh();
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await Refresh();
-    }
-
-    private async Task Refresh()
-    {
-        model = new Comment();
-        editContext = new EditContext(model);
-        comment = await DbContext.Comment.ToListAsync();
-    }
 }
-*@
+
+
+
+
+

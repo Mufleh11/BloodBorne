@@ -1,4 +1,6 @@
-﻿namespace BloodBorne.Model
+﻿using BloodBorne.Model;
+
+namespace BloodBorne.Model
 {
     public class Bosses
     {
@@ -9,7 +11,9 @@
         public string BossInfo { get; set; }
         public string ImageUrl { get; set; }
         public List<Comment> Comment { get; set; }
-        public List<BossList> BossList { get; set; }
+        public List<BossItem> BossItem { get; set; }
 
     }
 }
+
+

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloodBorne.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241213134935_InitialCreate")]
+    [Migration("20241214214834_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace BloodBorne.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
 
-            modelBuilder.Entity("BloodBorne.Model.BossList", b =>
+            modelBuilder.Entity("BloodBorne.Model.BossItem", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace BloodBorne.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BossLists");
+                    b.ToTable("BossItems");
                 });
 
             modelBuilder.Entity("BloodBorne.Model.Bosses", b =>
@@ -79,9 +79,6 @@ namespace BloodBorne.Migrations
 
                     b.Property<string>("CommentDetails")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Dislikes")
@@ -342,10 +339,10 @@ namespace BloodBorne.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BloodBorne.Model.BossList", b =>
+            modelBuilder.Entity("BloodBorne.Model.BossItem", b =>
                 {
                     b.HasOne("BloodBorne.Model.Bosses", "Bosses")
-                        .WithMany("BossList")
+                        .WithMany("BossItem")
                         .HasForeignKey("BossesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -454,7 +451,7 @@ namespace BloodBorne.Migrations
 
             modelBuilder.Entity("BloodBorne.Model.Bosses", b =>
                 {
-                    b.Navigation("BossList");
+                    b.Navigation("BossItem");
 
                     b.Navigation("Comment");
                 });

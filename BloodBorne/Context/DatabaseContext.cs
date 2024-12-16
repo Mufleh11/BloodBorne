@@ -11,10 +11,11 @@ namespace BloodBorne.Context
 
 
         public DbSet<Comment> Comment { get; set; }
-        public DbSet<BossList> BossLists { get; set; }
+        public DbSet<BossItem> BossItems { get; set; }
 
         public DbSet<Tags> Tags { get; set; }
         public DbSet<Bosses> Bosses { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Report> Reports { get; set; }
 
 

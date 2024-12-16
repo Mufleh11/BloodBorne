@@ -8,5 +8,14 @@ namespace BloodBorne.Model
         public string TagName { get; set; }
         public List<Comment> Comments { get; set; }
 
+
+
+        public class Tags
+        {
+            public int Id { get; set; }
+            public string tag { get; set; }
+            public List<Comment> Comment { get; set; }
+        }
+
     }
 }

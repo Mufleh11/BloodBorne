@@ -28,15 +28,242 @@ h1:focus {
     border-color: #929292;
 }
 
-.bloodborne-card {
+. /*bloodborne-card {
     background-image: url('/wwwroot/img/bosses/bloodborne.jpeg');
     background-size: cover;
     border: none;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
 }
-
-.form-control {
-    background-color: #222;
-    border-color: #555;
-    color: #ccc;
+*/
+.search-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px; /* Adjust the value as needed */
 }
+
+.search-bar {
+    flex: 10;
+}
+.card {
+    display: flex;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(255, 0, 0, 0.9); /* Red shadow */
+    margin: 20px auto;
+    background-color: #1a1a1a; /* Solid black background for the card */
+    color: #fff; /* White text */
+    padding: 15px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+    width: 90%; /* Optional: responsive card width */
+    max-width: 600px; /* Keeps cards manageable on large screens */
+    margin-top: 20px;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(255, 0, 0, 0.6); /* Brighter red shadow on hover */
+    }
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2b0000; /* Dark red background */
+    padding: 10px;
+    border-bottom: 1px solid #8b0000; /* Red border for definition */
+    font-size: 1.2rem;
+    color: #ffcc00; /* Golden username color */
+    margin-top: 20px;
+}
+
+.card-body {
+    margin-top: 10px;
+    padding: 10px 15px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #2a2a2a;
+    border-top: 1px solid #444;
+    font-size: 0.9rem;
+    color: #ccc; /* Subtle gray for footer text */
+    margin-bottom: 20px;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+    .badge.bg-warning {
+        background-color: #d32f2f;  Bright red 
+        color: #fff;  White text 
+    }
+
+    .badge.bg-primary {
+        background-color: #8b0000;  Dark red badge 
+        color: #fff;
+    }
+
+
+
+h4, p {
+    margin: 0; /* Remove default margins for a cleaner look */
+    word-break: break-word;
+}
+.comment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+main.container {
+    background-color: #121212 !important; /* Enforce black background for container */
+    padding: 20px; /* Adds breathing space around content */
+    min-height: 100vh; /* Ensure it covers the full viewport height */
+    border-radius: 0; /* Remove rounded corners if any */
+    margin-bottom: 20px;
+}
+html, body {
+    background-color: #121212 !important; /* Black background */
+    color: #fff; /* White text for readability */
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Full height coverage */
+}
+.comment-list .card {
+    background-color: #1a1a1a; /* Black for card */
+    color: #fff; /* White text for contrast */
+    box-shadow: 0 8px 16px rgba(255, 0, 0, 0.4); /* Red glow shadow */
+}
+
+/* Ensure the container does not stretch the input fields unnecessarily */
+.dark-form {
+    max-width: 4000px; /* Limit the width of the form container */
+    color: darkred;
+    font-weight: bold;
+    font-size: 1.6em;
+}
+
+/* Style the label with red text for visibility on a dark background */
+.form-label {
+    color: #ff4d4d; /* Bright red */
+  
+}
+
+
+
+/* Adjust specific dimensions for the textbox */
+.styled-textbox {
+    height: 60px; /* Increased height for a larger textbox */
+    width: 100%; /* Ensure the textbox uses the full width of its container */
+    min-width: 300px; /* Ensure a sensible minimum width */
+    max-width: 500px; /* Prevent it from becoming too wide */
+    background-color: #222; /* Dark gray background */
+    color: #fff; /* White text */
+    border: 1px solid #ff4d4d; /* Red border */
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.styled-select {
+    width: auto; /* Automatically adjust to content */
+    min-width: 150px; /* Set a sensible minimum width */
+}
+
+    /* Highlight input when focused */
+.styled-textbox:focus {
+    border-color: #ff6666; /* Lighter red when focused */
+    outline: 4px;
+    box-shadow: 0 0 5px #ff6666;
+}
+    .styled-select:focus {
+        border-color: #ff6666; /* Lighter red when focused */
+        outline: none;
+        box-shadow: 0 0 5px #ff6666;
+    }
+
+.styled-submit{
+    background-color: #ff4d4d; /* Base red color */
+    color: #fff; /* White text */
+    border: 2px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer; /* Show pointer cursor */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth hover effect */
+}
+
+    /* Hover effect for submit button */
+    .styled-submit:hover {
+        background-color: #ff6666; /* Slightly lighter red on hover */
+        box-shadow: 0 0 100px #ff6666; /* Glowing hover effect */
+        transform: scale(1.05); /* Slight zoom effect */
+    }
+
+    /* Focus effect */
+    .styled-submit:focus {
+        outline: 5px;
+        box-shadow: 0 0 5px #ff4d4d;
+    }
+
+/* Validation message styling */
+.validation-message {
+    color: #ff4d4d; /* Red for error messages */
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+
+.com {
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(255, 0, 0, 0.9); /* Red shadow */
+    margin: 20px auto;
+    background-color: #1a1a1a; /* Solid black background for the card */
+    color: #fff; /* White text */
+    padding: 15px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+    width: 90%; /* Optional: responsive card width */
+    max-width: 600px; /* Keeps cards manageable on large screens */
+}
+
+
+
+/*.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px #e50000;*/ /* Increased shadow */
+    /*margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 1);*/ /* Dark background */
+    /*color: #fff;*/ /* White text */
+
+/*}
+.card-body {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);*/ /* Increased shadow */
+    /*margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.0);*/ /* Dark background */
+    /*color: #fff;*/ /* White text */
+/*}
+.badge {
+    background-color: #555;
+    color: #fff;
+}
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    background-color: #333;*/ /* Darker footer background */
+    /*padding: 10px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    background-color: #333;*/ /* Darker header background */
+    /*padding: 10px;
+}*/
+
+

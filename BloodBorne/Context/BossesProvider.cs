@@ -30,5 +30,11 @@ namespace BloodBorne.Context
 
         }
 
+        public async Task<Bosses> GetBossByIdAsync(int id)
+        {
+            return await _context.Bosses
+                                 .FirstOrDefaultAsync(b => b.Id == id);
+        }
+
     }
 }

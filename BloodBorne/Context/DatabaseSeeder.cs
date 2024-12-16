@@ -41,8 +41,9 @@ namespace BloodBorne.Context
                 await _context!.SaveChangesAsync();
             }
 
+           
 
-           //This code is to make the admin user and to make sure the admin users details are correct
+            //This code is to make the admin user and to make sure the admin users details are correct
 
             if (!_context.Users.Any())
             {
@@ -99,6 +100,15 @@ namespace BloodBorne.Context
                 ];
         }
 
+        //private List<Comment> GetComments()
+        //{
+        //    return
+        //        [
+        //         new Comment {CommentDetails="Testing comment with tag", },
+        //         new Comment {CommentDetails = "Testing comment for diff bosses" }
+
+        //        ];
+        //}
 
     }
 

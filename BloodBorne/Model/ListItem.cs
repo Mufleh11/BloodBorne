@@ -3,7 +3,7 @@
     public class ListItem
     {
         public event Action? OnListUpdated;
-        public List<BossList> _items;
+        public List<BossItem> _items;
         public ListItem()
         {
             _items = [];
@@ -11,7 +11,7 @@
 
         public void AddItem(Bosses bosses)
         {           
-            _items.Add(new BossList { Bosses = bosses });
+            _items.Add(new BossItem { Bosses = bosses });
             OnListUpdated?.Invoke();
         }
 
@@ -21,11 +21,11 @@
             OnListUpdated?.Invoke();
         }
 
-        public IEnumerable<BossList> GetItems()
+        public IEnumerable<BossItem> GetItems()
         {
             return _items;
         }
-        public void SetItems(IEnumerable<BossList> items)
+        public void SetItems(IEnumerable<BossItem> items)
         {
             _items = items.ToList();
             OnListUpdated?.Invoke();
