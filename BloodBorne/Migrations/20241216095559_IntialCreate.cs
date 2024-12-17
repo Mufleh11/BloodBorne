@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BloodBorne.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class IntialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -187,24 +187,24 @@ namespace BloodBorne.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BossItems",
+                name: "BossLists",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     BossesId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BossItems", x => x.id);
+                    table.PrimaryKey("PK_BossLists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BossItems_AspNetUsers_UserId",
+                        name: "FK_BossLists_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_BossItems_Bosses_BossesId",
+                        name: "FK_BossLists_Bosses_BossesId",
                         column: x => x.BossesId,
                         principalTable: "Bosses",
                         principalColumn: "Id",
@@ -310,13 +310,13 @@ namespace BloodBorne.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BossItems_BossesId",
-                table: "BossItems",
+                name: "IX_BossLists_BossesId",
+                table: "BossLists",
                 column: "BossesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BossItems_UserId",
-                table: "BossItems",
+                name: "IX_BossLists_UserId",
+                table: "BossLists",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -364,7 +364,7 @@ namespace BloodBorne.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BossItems");
+                name: "BossLists");
 
             migrationBuilder.DropTable(
                 name: "Reports");

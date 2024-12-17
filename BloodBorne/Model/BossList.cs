@@ -4,7 +4,7 @@ using BloodBorne.Components.Shared;
 namespace BloodBorne.Model
 {
 
-    public class BossItem
+    public class BossList
     {
         public int Id {  get; set; }
         public Bosses Bosses { get; set; }

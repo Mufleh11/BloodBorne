@@ -11,7 +11,7 @@ namespace BloodBorne.Model
         public string BossInfo { get; set; }
         public string ImageUrl { get; set; }
         public List<Comment> Comment { get; set; }
-        public List<BossItem> BossItem { get; set; }
+        public List<BossList> BossList { get; set; }
 
     }
 }

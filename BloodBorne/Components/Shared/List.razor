@@ -2,6 +2,7 @@
 @using BloodBorne.Model
 @using BloodBorne.Components.Pages
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using BloodBorne.Components.Shared
 @inject ProtectedSessionStorage ProtectedSessionStorage
 @inject ListItem ListItem
 
@@ -41,7 +42,7 @@
     }
 
 
-    private void RemoveItem(BossItem item)
+    private void RemoveItem(BossList item)
     {
         ListItem.RemoveItem(item.Bosses);
     }

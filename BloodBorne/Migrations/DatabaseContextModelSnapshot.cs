@@ -17,9 +17,9 @@ namespace BloodBorne.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
 
-            modelBuilder.Entity("BloodBorne.Model.BossItem", b =>
+            modelBuilder.Entity("BloodBorne.Model.BossList", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -29,13 +29,13 @@ namespace BloodBorne.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("BossesId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BossItems");
+                    b.ToTable("BossLists");
                 });
 
             modelBuilder.Entity("BloodBorne.Model.Bosses", b =>
@@ -336,10 +336,10 @@ namespace BloodBorne.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BloodBorne.Model.BossItem", b =>
+            modelBuilder.Entity("BloodBorne.Model.BossList", b =>
                 {
                     b.HasOne("BloodBorne.Model.Bosses", "Bosses")
-                        .WithMany("BossItem")
+                        .WithMany("BossList")
                         .HasForeignKey("BossesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -448,7 +448,7 @@ namespace BloodBorne.Migrations
 
             modelBuilder.Entity("BloodBorne.Model.Bosses", b =>
                 {
-                    b.Navigation("BossItem");
+                    b.Navigation("BossList");
 
                     b.Navigation("Comment");
                 });
